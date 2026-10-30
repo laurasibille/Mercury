@@ -54,8 +54,8 @@ export function AccountsSection({ privateMode }: AccountsSectionProps) {
             className="flex h-11 w-full items-center px-6 text-left transition-colors hover:bg-[var(--color-canvas-subtle)] max-[479px]:px-5"
           >
             <MercuryMark className="mr-3 h-6 w-6 shrink-0 text-[var(--color-indigo-500)]" />
-            <span className="min-w-0 flex-1 truncate text-[15px] leading-6 text-[var(--color-ink-secondary)]">{account.name}</span>
-            <span className="ml-4 shrink-0 text-[15px] leading-6 tabular-nums text-[var(--color-ink)]">
+            <span className="min-w-0 flex-1 truncate text-[14px] leading-5 text-[var(--color-ink-secondary)]">{account.name}</span>
+            <span className="ml-4 shrink-0 text-[14px] leading-5 tabular-nums text-[var(--color-ink)]">
               {privateMode ? "••••••" : account.amount}
             </span>
           </button>

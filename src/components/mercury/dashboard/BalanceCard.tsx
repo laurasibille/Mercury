@@ -34,7 +34,7 @@ export function BalanceCard({ privateMode }: BalanceCardProps) {
     <Card className="relative flex h-[348px] w-full min-w-0 flex-col overflow-visible sm:max-w-[470px]">
       <header className="flex shrink-0 items-start justify-between px-6 pb-0.5 pt-5 max-[479px]:px-5">
         <div className="min-w-0">
-          <p className="text-[15px] leading-6 text-[var(--color-ink-muted)]">Mercury balance</p>
+          <p className="text-[14px] leading-5 text-[var(--color-ink-muted)]">Mercury balance</p>
           <p className="mt-0.5 truncate text-[28px] font-normal leading-9 tracking-[-0.025em] text-[var(--color-ink)]">
             <Amount privateMode={privateMode}>$5,216,471.18</Amount>
           </p>

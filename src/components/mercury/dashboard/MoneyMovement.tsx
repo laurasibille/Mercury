@@ -31,7 +31,7 @@ function MovementCard({ direction, total, average, items, privateMode }: Movemen
     <Card className="min-w-0 overflow-hidden p-5 sm:p-6">
       <div className="flex items-start justify-between gap-4">
         <div>
-          <div className="flex items-center gap-2 text-[15px] text-[var(--color-ink-secondary)]">
+          <div className="flex items-center gap-2 text-[14px] text-[var(--color-ink-secondary)]">
             <span className={`flex h-7 w-7 items-center justify-center rounded-full ${incoming ? "bg-[var(--color-primary-soft)] text-[var(--color-primary)]" : "bg-[var(--color-gray-100)] text-[var(--color-ink-secondary)]"}`}>
               {incoming ? <ArrowDownLeft aria-hidden="true" size={15} /> : <ArrowUpRight aria-hidden="true" size={15} />}
             </span>

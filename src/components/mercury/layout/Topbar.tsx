@@ -1,15 +1,17 @@
 "use client";
 
 import Image from "next/image";
-import { Bell, Eye, EyeOff, Menu, MoveHorizontal, Search, Settings } from "lucide-react";
+import { Bell, Eye, EyeOff, MoveHorizontal, Search, Settings } from "lucide-react";
+import { SidebarTrigger } from "@/components/ui/sidebar";
 import { MercuryMark } from "../primitives/MercuryMark";
 
-export function Topbar({ privateMode, onPrivateMode, onMenu }: { privateMode: boolean; onPrivateMode: () => void; onMenu: () => void }) {
+export function Topbar({ privateMode, onPrivateMode }: { privateMode: boolean; onPrivateMode: () => void }) {
   return (
-    <header className="fixed left-0 right-0 top-0 z-30 flex h-12 items-center border-b border-[var(--color-border)] bg-white px-4 min-[961px]:left-[219px] min-[961px]:top-14 min-[961px]:h-[72px] min-[961px]:px-6">
-      <button aria-label="Open navigation" onClick={onMenu} className="mr-3 min-[961px]:hidden"><Menu size={17} /></button>
-      <div className="flex min-w-0 items-center gap-2 min-[961px]:hidden"><MercuryMark className="h-5 w-5 shrink-0" /><span className="truncate text-[15px]">Mercury Demo</span></div>
-      <button className="hidden items-center gap-2 text-[15px] text-[var(--color-ink-secondary)] min-[961px]:flex"><Search size={16} />Search for anything</button>
+    <header className="sticky top-0 z-30 flex h-14 shrink-0 items-center border-b border-[var(--color-border)] bg-white/95 px-3 backdrop-blur md:top-14 md:h-16 md:px-5">
+      <SidebarTrigger className="mr-2" aria-label="Afficher ou réduire la navigation" />
+      <span className="mr-4 hidden h-5 w-px bg-[var(--color-border)] md:block" />
+      <div className="flex min-w-0 items-center gap-2 md:hidden"><MercuryMark className="h-5 w-5 shrink-0" /><span className="truncate text-[14px]">Mercury Demo</span></div>
+      <button className="hidden items-center gap-2 text-[14px] text-[var(--color-ink-secondary)] md:flex"><Search size={15} />Search for anything</button>
       <div className="ml-auto flex items-center gap-2 text-[var(--color-ink-secondary)]">
         <button className="hidden h-8 items-center gap-2 rounded-full px-3 hover:bg-[var(--color-surface)] min-[540px]:flex"><MoveHorizontal size={15} />Move money</button>
         <button aria-label="Search" className="grid h-8 w-8 place-items-center rounded-full hover:bg-[var(--color-surface)] min-[961px]:hidden"><Search size={16} /></button>

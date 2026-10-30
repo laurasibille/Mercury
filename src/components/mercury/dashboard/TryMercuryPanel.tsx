@@ -113,7 +113,7 @@ export function TryMercuryPanel() {
         <header className={`flex w-full items-center justify-between gap-4 ${mobileOpen ? "mb-4" : ""}`}>
           <div className="flex min-w-0 items-center gap-2">
             {!mobileOpen && <Lightbulb aria-hidden="true" size={17} className="shrink-0 text-[var(--color-primary)]" />}
-            <h2 className="m-0 truncate text-[15px] leading-6 font-normal text-[var(--color-ink)]">
+            <h2 className="m-0 truncate text-[14px] leading-5 font-normal text-[var(--color-ink)]">
               {mobileOpen ? "Try out Mercury for yourself" : "Learn more about Mercury"}
             </h2>
           </div>

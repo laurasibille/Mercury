@@ -9,7 +9,7 @@ type BillPayModuleProps = {
 export function BillPayModule({ privateMode }: BillPayModuleProps) {
   return (
     <Card className="flex h-[232px] min-w-0 flex-col overflow-hidden p-5">
-      <div className="flex items-center gap-2 text-[15px] text-[var(--color-ink-secondary)]">
+      <div className="flex items-center gap-2 text-[14px] text-[var(--color-ink-secondary)]">
         <FileText aria-hidden="true" size={16} strokeWidth={1.7} />
         <span>Bill Pay</span>
       </div>
@@ -34,7 +34,7 @@ export function BillPayModule({ privateMode }: BillPayModuleProps) {
       <div className="mt-auto flex items-center justify-between gap-3">
         <div className="min-w-0">
           <p className="text-[13px] leading-[18px] text-[var(--color-ink-muted)]">Inbox</p>
-          <p className="truncate text-[15px] leading-5 text-[var(--color-ink-secondary)]">
+          <p className="truncate text-[14px] leading-5 text-[var(--color-ink-secondary)]">
             3 items · {privateMode ? <span aria-label="Amount hidden">••••</span> : "$10K"}
           </p>
         </div>

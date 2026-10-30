@@ -14,7 +14,7 @@ export function CreditCardModule({ privateMode }: CreditCardModuleProps) {
   return (
     <Card className="flex h-[232px] min-w-0 flex-col overflow-hidden p-5">
       <div className="flex items-center justify-between">
-        <div className="flex items-center gap-2 text-[15px] text-[var(--color-ink-secondary)]">
+        <div className="flex items-center gap-2 text-[14px] text-[var(--color-ink-secondary)]">
           <CreditCard aria-hidden="true" size={16} strokeWidth={1.7} />
           <span>Credit Card</span>
         </div>

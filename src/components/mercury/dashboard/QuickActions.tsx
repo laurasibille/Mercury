@@ -11,7 +11,7 @@ export function QuickActions() {
         <Button size="sm" icon={<MoveHorizontal size={13} />}>Transfer</Button><Button size="sm" icon={<Plus size={13} />}>Deposit</Button><Button size="sm" icon={<ArrowLeftToLine size={13} />}>Request</Button><Button size="sm" icon={<ArrowUpFromLine size={13} />}>Upload bill</Button>
       </div>
       <Button size="sm" className="min-[640px]:hidden">More <ChevronDown size={13} /></Button>
-      <button className="ml-auto hidden h-8 items-center gap-2 rounded-full px-3 text-[15px] hover:bg-[var(--color-surface)] min-[640px]:flex"><Paperclip size={13} />Customize</button>
+      <button className="ml-auto hidden h-8 items-center gap-2 rounded-full px-3 text-[14px] hover:bg-[var(--color-surface)] min-[640px]:flex"><Paperclip size={13} />Customize</button>
     </div>
   );
 }

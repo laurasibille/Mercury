@@ -1,0 +1,110 @@
+{
+  "version": 1,
+  "project": {
+    "name": "app",
+    "productType": null,
+    "stack": [
+      "nextjs",
+      "react",
+      "tailwind-v4"
+    ]
+  },
+  "sources": {
+    "tokens": [
+      "src/app/globals.css",
+      "src/styles/mercury-tokens.css"
+    ],
+    "components": [
+      "src/components/mercury",
+      "src/components/ui/sidebar.tsx"
+    ],
+    "assets": [],
+    "instructions": [
+      "AGENTS.md"
+    ]
+  },
+  "design": {
+    "colorMode": "light",
+    "colors": {
+      "sidebar": "#fbfcfd",
+      "primary": "#5266eb",
+      "foreground": "#1e1e2a"
+    },
+    "typography": {
+      "family": "Inter Variable",
+      "body": "14px/20px",
+      "navigation": "14px/20px",
+      "metadata": "12px/18px"
+    },
+    "spacing": {
+      "base": "4px"
+    },
+    "radius": {
+      "default": "8px",
+      "card": "12px"
+    },
+    "shadows": {
+      "popover": "0 8px 24px rgba(4, 4, 52, .13)"
+    },
+    "motion": {
+      "fast": "160ms",
+      "panel": "300ms"
+    },
+    "density": "compact"
+  },
+  "components": {
+    "installed": [
+      "sidebar-08"
+    ],
+    "preferredPrimitives": [
+      "shadcn/sidebar",
+      "mercury/Button",
+      "mercury/Card"
+    ],
+    "patterns": [
+      "collapsible navigation rail",
+      "responsive sheet navigation"
+    ]
+  },
+  "constraints": {
+    "must": [
+      "Preserve Mercury product identity and copy",
+      "Use Mercury semantic tokens",
+      "Keep navigation labels at 14px"
+    ],
+    "avoid": [
+      "Generic shadcn demo content",
+      "Hardcoded sidebar background outside tokens"
+    ]
+  },
+  "decisions": [
+    {
+      "date": "2026-10-30",
+      "decision": "Adopt the sidebar-08 shell with a 240px expanded sidebar and 56px icon rail.",
+      "reason": "User-requested navigation density and collapsible layout while preserving Mercury content."
+    }
+  ],
+  "evidence": [
+    {
+      "fact": "design.tokens",
+      "source": "src/app/globals.css"
+    },
+    {
+      "fact": "project.instructions",
+      "source": "AGENTS.md"
+    },
+    {
+      "fact": "project.stack:nextjs",
+      "source": "package.json"
+    },
+    {
+      "fact": "project.stack:react",
+      "source": "package.json"
+    },
+    {
+      "fact": "project.stack:tailwind-v4",
+      "source": "package.json"
+    }
+  ],
+  "generatedAt": "2026-10-30T08:55:06.718Z"
+}

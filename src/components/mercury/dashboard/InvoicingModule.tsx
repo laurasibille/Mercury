@@ -13,7 +13,7 @@ function PrivateAmount({ children, privateMode }: { children: string; privateMod
 export function InvoicingModule({ privateMode }: InvoicingModuleProps) {
   return (
     <Card className="flex h-[232px] min-w-0 flex-col overflow-hidden p-5">
-      <div className="flex items-center gap-2 text-[15px] text-[var(--color-ink-secondary)]">
+      <div className="flex items-center gap-2 text-[14px] text-[var(--color-ink-secondary)]">
         <ReceiptText aria-hidden="true" size={16} strokeWidth={1.7} />
         <span>Invoicing</span>
       </div>
@@ -34,7 +34,7 @@ export function InvoicingModule({ privateMode }: InvoicingModuleProps) {
       <div className="mt-auto flex items-center justify-between gap-3">
         <div className="min-w-0">
           <p className="text-[13px] leading-[18px] text-[var(--color-ink-muted)]">Open</p>
-          <p className="truncate text-[15px] leading-5 text-[var(--color-ink-secondary)]">
+          <p className="truncate text-[14px] leading-5 text-[var(--color-ink-secondary)]">
             12 items · <PrivateAmount privateMode={privateMode}>$12.3K</PrivateAmount>
           </p>
         </div>
