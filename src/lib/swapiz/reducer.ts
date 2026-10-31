@@ -17,9 +17,11 @@ export type SwapizAction =
   | { type: "date/changed"; dateRange: DateRange }
   | { type: "theme/changed"; theme: SwapizState["theme"] }
   | { type: "move/open"; operation: MoveOperation | null }
+  | { type: "move/choose"; operation: MoveOperation | null }
   | { type: "move/close" }
   | { type: "alert/resolved"; alertId: string }
   | { type: "approval/resolved"; approvalId: string }
+  | { type: "approval/added"; approval: Approval }
   | { type: "transaction/added"; transaction: Transaction };
 
 export const initialSwapizState: SwapizState = {
@@ -46,12 +48,17 @@ export function swapizReducer(state: SwapizState, action: SwapizAction): SwapizS
       return { ...state, moveMoney: { open: true, operation: action.operation } };
     case "move/close":
       return { ...state, moveMoney: { open: false, operation: null } };
+    case "move/choose":
+      return state.moveMoney.open ? { ...state, moveMoney: { open: true, operation: action.operation } } : state;
     case "alert/resolved":
       if (!state.alerts.some(item => item.id === action.alertId && !item.resolved)) return state;
       return { ...state, alerts: state.alerts.map(item => item.id === action.alertId ? { ...item, resolved: true } : item) };
     case "approval/resolved":
       if (!state.approvals.some(item => item.id === action.approvalId && !item.resolved)) return state;
       return { ...state, approvals: state.approvals.map(item => item.id === action.approvalId ? { ...item, resolved: true } : item) };
+    case "approval/added":
+      if (!swapizDemoData.organizations.some(item => item.id === action.approval.organizationId) || state.approvals.some(item => item.id === action.approval.id)) return state;
+      return { ...state, approvals: [action.approval, ...state.approvals] };
     case "transaction/added":
       if (!validScope(action.transaction.organizationId) || state.transactions.some(item => item.id === action.transaction.id)) return state;
       return { ...state, transactions: [action.transaction, ...state.transactions] };

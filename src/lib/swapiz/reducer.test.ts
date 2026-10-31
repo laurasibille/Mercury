@@ -3,6 +3,23 @@ import { initialSwapizState, swapizReducer } from "./reducer";
 import type { ScopeId } from "@/types/swapiz";
 
 describe("shared dashboard state", () => {
+  it("changes movement steps only while open and preserves filters", () => {
+    const state = { ...initialSwapizState, scopeId: "marketing" as const };
+    expect(swapizReducer(state, { type: "move/choose", operation: "swap" })).toBe(state);
+    const open = swapizReducer(state, { type: "move/open", operation: "send" });
+    const choose = swapizReducer(open, { type: "move/choose", operation: null });
+    expect(choose.moveMoney).toEqual({ open: true, operation: null });
+    expect(choose.scopeId).toBe("marketing");
+  });
+
+  it("adds a demo approval once and rejects unknown organizations", () => {
+    const approval = { ...initialSwapizState.approvals[0], id: "demo-approval" };
+    const next = swapizReducer(initialSwapizState, { type: "approval/added", approval });
+    expect(next.approvals[0].id).toBe("demo-approval");
+    expect(initialSwapizState.approvals).toHaveLength(7);
+    expect(swapizReducer(next, { type: "approval/added", approval })).toBe(next);
+    expect(swapizReducer(next, { type: "approval/added", approval: { ...approval, id: "invalid", organizationId: "all" as never } })).toBe(next);
+  });
   it("changes scope and resets an invalid scope to all", () => {
     const scoped = swapizReducer(initialSwapizState, { type: "scope/changed", scopeId: "marketing" });
     expect(scoped.scopeId).toBe("marketing");

@@ -20,7 +20,7 @@ export function DashboardControls() {
   const { state, dispatch } = useSwapiz();
   const openMovement = (operation: MoveOperation) => dispatch({ type: "move/open", operation });
   return <section aria-label="Dashboard controls" className="flex flex-wrap items-start justify-between gap-4">
-    <div aria-label="Movement shortcuts" className="flex flex-wrap items-center gap-2">
+    <div role="group" aria-label="Movement shortcuts" className="flex flex-wrap items-center gap-2">
       {actions.map(({ label, operation, icon: Icon }, index) => <button key={operation} type="button" onClick={() => openMovement(operation)} className={`${actionClass} ${index > 0 ? "hidden sm:flex" : ""}`}><Icon aria-hidden="true" className="size-4" />{label}</button>)}
       <div className="sm:hidden">
         <Menu.Root>
@@ -35,7 +35,7 @@ export function DashboardControls() {
         </Menu.Root>
       </div>
     </div>
-    <div aria-label="Dashboard filters" className="flex min-w-0 flex-wrap items-center gap-2">
+    <div role="group" aria-label="Dashboard filters" className="flex min-w-0 flex-wrap items-center gap-2">
       <ScopeSelect value={state.scopeId} onChange={scopeId => dispatch({ type: "scope/changed", scopeId })} />
       <DateRangePopover value={state.dateRange} onChange={dateRange => dispatch({ type: "date/changed", dateRange })} />
     </div>

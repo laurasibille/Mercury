@@ -32,6 +32,11 @@ function changeDates(from: string, to: string) {
 }
 
 describe("dashboard controls", () => {
+  it("exposes named shortcut and filter groups to assistive technology", () => {
+    renderControls();
+    expect(screen.getByRole("group", { name: "Movement shortcuts" })).toContainElement(screen.getByRole("button", { name: "Send" }));
+    expect(screen.getByRole("group", { name: "Dashboard filters" })).toContainElement(screen.getByRole("button", { name: "All companies" }));
+  });
   it.each([["Send", "send"], ["Receive", "receive"], ["Transfer", "transfer"], ["Swap", "swap"], ["Mass Pay", "mass-pay"]])("opens %s directly while preserving filters", async (label, operation) => {
     const user = userEvent.setup();
     renderControls();
