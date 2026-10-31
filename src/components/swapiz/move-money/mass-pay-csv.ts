@@ -14,18 +14,23 @@ export function recipientError(row: Recipient): string | undefined {
 export function parseMassPayCsv(text: string): { rows: Recipient[]; error?: string } {
   const invalid = (error: string) => ({ rows: [], error });
   const records: string[][] = [];
-  let row: string[] = [], field = "", quoted = false;
+  let row: string[] = [], field = "", quoted = false, closedQuote = false;
   const input = text.replace(/^\uFEFF/, "");
   for (let index = 0; index < input.length; index++) {
     const char = input[index];
+    if (closedQuote && char !== "," && char !== "\n" && char !== "\r") {
+      if (/\s/.test(char)) continue;
+      return invalid("Check CSV quote formatting: only whitespace may follow a closing quote.");
+    }
     if (char === '"') {
       if (quoted && input[index + 1] === '"') { field += '"'; index++; }
-      else if (quoted || !field.trim()) quoted = !quoted;
+      else if (quoted) { quoted = false; closedQuote = true; }
+      else if (!field.trim()) quoted = true;
       else return invalid("Check CSV quote formatting.");
-    } else if (char === "," && !quoted) { row.push(field.trim()); field = ""; }
+    } else if (char === "," && !quoted) { row.push(field.trim()); field = ""; closedQuote = false; }
     else if ((char === "\n" || char === "\r") && !quoted) {
       if (char === "\r" && input[index + 1] === "\n") index++;
-      row.push(field.trim()); if (row.some(Boolean)) records.push(row); row = []; field = "";
+      row.push(field.trim()); if (row.some(Boolean)) records.push(row); row = []; field = ""; closedQuote = false;
     } else field += char;
   }
   if (quoted) return invalid("Check CSV quote formatting: a quoted field was not closed.");

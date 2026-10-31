@@ -26,7 +26,7 @@ export type SwapizAction =
 
 export const initialSwapizState: SwapizState = {
   scopeId: "all",
-  dateRange: getPresetRange("last-30-days", new Date("2026-10-31T12:00:00Z")),
+  dateRange: getPresetRange("last-30-days"),
   theme: "system",
   moveMoney: { open: false, operation: null },
   alerts: swapizDemoData.alerts,

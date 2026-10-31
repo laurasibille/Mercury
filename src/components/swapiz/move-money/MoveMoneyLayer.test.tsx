@@ -1,6 +1,6 @@
 import { cleanup, fireEvent, render, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { afterEach, beforeEach, describe, expect, it } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { SwapizProvider, useSwapiz } from "../providers/SwapizProvider";
 import type { MoveOperation } from "@/types/swapiz";
 import { MoveMoneyLayer } from "./MoveMoneyLayer";
@@ -8,11 +8,11 @@ import { MoveMoneyLayer } from "./MoveMoneyLayer";
 beforeEach(() => {
   Object.defineProperty(window, "matchMedia", { configurable: true, value: () => ({ matches: false, addEventListener() {}, removeEventListener() {} }) });
 });
-afterEach(cleanup);
+afterEach(() => { cleanup(); vi.useRealTimers(); });
 
 function Harness({ operation = null }: { operation?: MoveOperation | null }) {
-  const { state, dispatch } = useSwapiz();
-  return <><button onClick={() => dispatch({ type: "move/open", operation })}>Open movement</button><output aria-label="Demo records">{JSON.stringify({ approvals: state.approvals, transactions: state.transactions })}</output><MoveMoneyLayer /></>;
+  const { state, dispatch, snapshot } = useSwapiz();
+  return <><button onClick={() => dispatch({ type: "move/open", operation })}>Open movement</button><output aria-label="Demo records">{JSON.stringify({ approvals: state.approvals, transactions: state.transactions, snapshot: { approvals: snapshot.approvals, transactions: snapshot.transactions } })}</output><MoveMoneyLayer /></>;
 }
 async function open(operation: MoveOperation | null = null) {
   const user = userEvent.setup();
@@ -25,6 +25,20 @@ const records = () => JSON.parse(screen.getByLabelText("Demo records").textConte
 const tron = "TQ7mo1hP5P3hZuDsHFB3B3ZPVF9D7D4kPa";
 
 describe("global Move money", () => {
+  it.each(["send", "receive"] as const)("keeps a new %s request in the default snapshot when the wall clock is outside the demo period", async operation => {
+    vi.useFakeTimers({ toFake: ["Date"] });
+    vi.setSystemTime(new Date("2030-01-15T09:30:00Z"));
+    const user = await open(operation);
+    change("Amount", "50");
+    if (operation === "send") change("Recipient address", tron);
+    await user.click(screen.getByRole("button", { name: "Review request" }));
+    await user.click(screen.getByRole("button", { name: operation === "send" ? "Create demo approval" : "Create demo request" }));
+    const key = operation === "send" ? "approvals" : "transactions";
+    const created = records()[key][0];
+    expect(records().snapshot[key].some((record: { id: string }) => record.id === created.id)).toBe(true);
+    expect(created.date).toBe("2026-10-31");
+  });
+
   it("shows every operation in an accessible modal and moves focus inside", async () => {
     const user = await open();
     const dialog = screen.getByRole("dialog", { name: "Move money" });

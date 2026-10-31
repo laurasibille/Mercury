@@ -20,7 +20,11 @@ export const walletAssets = (id: string) => swapizDemoData.walletBalances.filter
 export const balanceFor = (id: string, asset: string) => swapizDemoData.walletBalances.find(balance => balance.walletId === id && balance.asset === asset)?.amount ?? 0;
 export const money = (amount: number, asset: string) => `${amount.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 6 })} ${asset}`;
 export const newDemoId = () => `demo-${crypto.randomUUID()}`;
-export const positiveAmountError = (amount: string, balance?: number) => !Number.isFinite(Number(amount)) || Number(amount) <= 0 ? "Enter an amount greater than zero." : balance !== undefined && Number(amount) > balance ? "Amount exceeds the available demo wallet balance." : undefined;
+export const positiveAmountError = (amount: string, balance?: number) => {
+  if (!/^(?:\d+(?:\.\d+)?|\.\d+)$/.test(amount.trim())) return "Enter a positive decimal amount.";
+  if (!Number.isFinite(Number(amount)) || Number(amount) <= 0) return "Enter an amount greater than zero.";
+  return balance !== undefined && Number(amount) > balance ? "Amount exceeds the available demo wallet balance." : undefined;
+};
 
 // Structural validation only: this demo does not perform blockchain or AML checks.
 export function addressValid(address: string, network: string) {

@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useSwapiz } from "../providers/SwapizProvider";
+import { getDemoNow } from "@/lib/swapiz/demo-clock";
 import type { Asset } from "@/types/swapiz";
 import { initialOrganization, money, networkAssets, newDemoId, organizationWallets, positiveAmountError, prices, walletName, wallets } from "./flow-utils";
 import { AmountField, AssetField, CommentField, FlowFrame, organizationSummary, OrganizationField, useFlow, WalletField } from "./FlowFrame";
@@ -19,7 +20,7 @@ export function ReceiveFlow() {
   function changeWallet(id: string) { setWalletId(id); setAsset(networkAssets(wallets.find(item => item.id === id)?.network ?? "")[0] ?? "USDT"); }
   return <FlowFrame title="Receive" description="Create a demo request for funds to arrive in a company wallet." flow={flow} confirmLabel="Create demo request"
     onReview={() => flow.review({ wallet: !wallet ? "Choose a destination wallet." : undefined, amount: positiveAmountError(amount) })}
-    onConfirm={() => { if (!wallet) return; const now = new Date(); dispatch({ type: "transaction/added", transaction: { id: newDemoId(), date: now.toISOString().slice(0, 10), time: now.toISOString().slice(11, 16), organizationId: organization, type: "receive", amountLabel: money(Number(amount), asset), usdValue: Number(amount) * prices[asset], asset, network: wallet.network, wallet: wallet.name, source: `Demo receive request${midMaster ? " · Mid Master AML path" : ""}${comment ? ` · ${comment}` : ""}`, status: "pending", address: wallet.address } }); }}
+    onConfirm={() => { if (!wallet) return; const now = getDemoNow(); dispatch({ type: "transaction/added", transaction: { id: newDemoId(), date: now.toISOString().slice(0, 10), time: now.toISOString().slice(11, 16), organizationId: organization, type: "receive", amountLabel: money(Number(amount), asset), usdValue: Number(amount) * prices[asset], asset, network: wallet.network, wallet: wallet.name, source: `Demo receive request${midMaster ? " · Mid Master AML path" : ""}${comment ? ` · ${comment}` : ""}`, status: "pending", address: wallet.address } }); }}
     summary={[organizationSummary(organization), ["Destination wallet", walletName(walletId)], ["Requested amount", money(Number(amount), asset)], ["Routing", midMaster ? "Mid Master → AML review → destination wallet (demo)" : "Direct to destination wallet"], ["Comment", comment]]}
     confirmation={<div className="space-y-2 text-sm"><p>Demo request address · {wallet?.network}</p><output aria-label="Request address" className="block break-all rounded-lg bg-[var(--color-surface)] p-3 font-mono text-xs">{wallet?.address}</output><p className="text-xs text-[var(--color-ink-muted)]">No new blockchain address was generated. This request uses the selected demo wallet.</p></div>}>
     <OrganizationField value={organization} onChange={id => { setOrganization(id); changeWallet(organizationWallets(id)[0]?.id ?? ""); }} />

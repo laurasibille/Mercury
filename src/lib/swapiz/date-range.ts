@@ -1,8 +1,9 @@
 import type { DatePreset, DateRange } from "@/types/swapiz";
+import { getDemoNow } from "./demo-clock";
 
 const iso = (date: Date) => date.toISOString().slice(0, 10);
 
-export function getPresetRange(preset: DatePreset, today = new Date()): DateRange {
+export function getPresetRange(preset: DatePreset, today = getDemoNow()): DateRange {
   const end = new Date(Date.UTC(today.getUTCFullYear(), today.getUTCMonth(), today.getUTCDate()));
   const start = new Date(end);
   const labels: Record<DatePreset, string> = { today: "Today", "last-7-days": "Last 7 days", "last-30-days": "Last 30 days", "this-month": "This month", "last-90-days": "Last 90 days", "this-year": "This year", custom: "Custom range" };

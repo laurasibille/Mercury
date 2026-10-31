@@ -24,6 +24,20 @@ describe("Mass Pay CSV boundary", () => {
     expect(parseMassPayCsv(header + Array(200).fill(row).join("\n")).rows).toHaveLength(200);
     expect(parseMassPayCsv(header + Array(201).fill(row).join("\n")).error).toMatch(/200/);
   });
+  it.each(['"2"5', '"2" 5', '"2"x', '"2" "5"'])("rejects content after a closed CSV quote: %s", amount => {
+    const result = parseMassPayCsv(`company,currency,network,amount,address\nAmazon,USDT,TRON,${amount},${address}`);
+    expect(result.rows).toEqual([]);
+    expect(result.error).toMatch(/quote/i);
+  });
+  it("allows whitespace between a closing quote and a delimiter", () => {
+    const result = parseMassPayCsv(`company,currency,network,amount,address\n"Amazon" \t,USDT,TRON,"25" \t,${address}`);
+    expect(result.error).toBeUndefined();
+    expect(result.rows[0].amount).toBe("25");
+    expect(recipientError(result.rows[0])).toBeUndefined();
+  });
+  it.each(["0x10", "0b10", "0o10", "1e2", "+10"])("marks a non-decimal amount Check: %s", amount => {
+    expect(recipientError({ company: "Amazon", currency: "USDT", network: "TRON · TRC-20", amount, address })).toMatch(/decimal/i);
+  });
   it.each([
     [{ company: "Missing" }, /company/i], [{ currency: "DOGE" }, /currency/i], [{ currency: "ETH" }, /network/i],
     [{ network: "unknown" }, /network/i], [{ amount: "0" }, /greater than zero/i], [{ address: "bad" }, /address/i],

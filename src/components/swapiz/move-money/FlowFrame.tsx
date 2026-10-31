@@ -4,6 +4,7 @@ import { useEffect, useId, useRef, useState, type ReactNode } from "react";
 import { ArrowLeft, Check, ShieldCheck } from "lucide-react";
 import { useSwapiz } from "../providers/SwapizProvider";
 import { GlassCard } from "../primitives/GlassCard";
+import { getDemoNow } from "@/lib/swapiz/demo-clock";
 import type { Asset, MoveOperation, OrganizationId } from "@/types/swapiz";
 import { newDemoId, organizationName, organizations, walletName } from "./flow-utils";
 
@@ -47,7 +48,7 @@ export function useFlow() {
 export function useCreateApproval() {
   const { dispatch } = useSwapiz();
   return (operation: MoveOperation, organizationId: OrganizationId, title: string) => dispatch({ type: "approval/added", approval: {
-    id: newDemoId(), date: new Date().toISOString().slice(0, 10), organizationId, type: operation, title,
+    id: newDemoId(), date: getDemoNow().toISOString().slice(0, 10), organizationId, type: operation, title,
     initiator: "Kramer · demo", approvals: 0, requiredApprovals: 2, resolved: false,
   } });
 }

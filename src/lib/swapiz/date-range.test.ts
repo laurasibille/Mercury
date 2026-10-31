@@ -1,7 +1,14 @@
-import { describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import { getPresetRange, validateDateRange } from "./date-range";
 
+afterEach(() => vi.useRealTimers());
+
 describe("date ranges", () => {
+  it("anchors implicit demo presets independently of the wall clock", () => {
+    vi.useFakeTimers({ toFake: ["Date"] });
+    vi.setSystemTime(new Date("2030-01-15T09:30:00Z"));
+    expect(getPresetRange("today")).toEqual({ preset: "today", from: "2026-10-31", to: "2026-10-31", label: "Today" });
+  });
   const today = new Date("2026-10-31T12:00:00Z");
   it("builds an inclusive last-30-days range", () => {
     expect(getPresetRange("last-30-days", today)).toEqual({ preset: "last-30-days", from: "2026-10-02", to: "2026-10-31", label: "Last 30 days" });
