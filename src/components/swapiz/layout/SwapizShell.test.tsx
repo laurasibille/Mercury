@@ -38,6 +38,13 @@ function renderShell() {
 }
 
 describe("shared dashboard shell", () => {
+  it("keeps top navigation on an opaque surface without backdrop blur", () => {
+    renderShell();
+    const header = screen.getByRole("banner");
+    expect(header).toHaveClass("bg-[var(--color-canvas)]");
+    expect(header.className).not.toMatch(/glass|backdrop/);
+  });
+
   it("exposes only four primary links and opens movement without changing filters", async () => {
     const user = userEvent.setup();
     renderShell();

@@ -20,7 +20,7 @@ function pageTitle(pathname: string) {
 export function SwapizTopbar() {
   const pathname = usePathname();
   const { dispatch } = useSwapiz();
-  return <header className="sticky top-0 z-20 flex h-16 shrink-0 items-center justify-between gap-3 border-b border-[var(--color-border)] bg-[var(--swapiz-glass-strong)] px-4 backdrop-blur-xl md:px-6">
+  return <header className="sticky top-0 z-20 flex h-16 shrink-0 items-center justify-between gap-3 border-b border-[var(--color-border)] bg-[var(--color-canvas)] px-4 md:px-6">
     <div className="flex min-w-0 items-center gap-3">
       <SidebarTrigger />
       <span className="truncate text-sm leading-5 text-[var(--color-ink-secondary)]">{pageTitle(pathname)}</span>
