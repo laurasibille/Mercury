@@ -161,6 +161,11 @@ describe("Settings, Users, and Roles routes", () => {
   it("shows five roles with expandable editable permissions and locks finance fee permissions", async () => {
     const user = userEvent.setup();
     renderPage(<RolesPage />);
+    expect(screen.getAllByText("Owner-only")).toHaveLength(2);
+    for (const label of screen.getAllByText("Owner-only")) {
+      expect(label).toHaveClass("text-xs");
+      expect(label).not.toHaveClass("text-[11px]");
+    }
     expect(screen.getByRole("table", { name: "Roles" })).toBeVisible();
     expect(screen.getAllByRole("row")).toHaveLength(6);
     await user.click(within(screen.getByRole("table", { name: "Roles" })).getByRole("button", { name: "Expand Finance permissions" }));

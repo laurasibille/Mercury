@@ -23,7 +23,7 @@ export function SendFlow() {
   function changeWallet(id: string) { setWalletId(id); const next = walletAssets(id)[0] ?? "USDT"; setAsset(next); setReceiveAsset(next); }
   return <FlowFrame title="Send" description="Prepare a payment to an external address for your approval team." flow={flow}
     onReview={() => flow.review({ wallet: !wallet ? "Choose a source wallet." : undefined, amount: positiveAmountError(amount, available), address: addressValid(address, network) ? undefined : `Enter a valid ${network || "network"} recipient address.` })}
-    onConfirm={() => createApproval("send", organization, `Send ${money(Number(amount), asset)} → ${address.trim()} · ${receiveAsset} · ${network}${comment ? ` · ${comment}` : ""}`)}
+    onConfirm={() => createApproval("send", organization, `Send ${money(Number(amount), asset)} → ${address.trim()} · ${receiveAsset} · ${network}${comment ? ` · ${comment}` : ""}`, [{ amount: Number(amount), asset }])}
     summary={[organizationSummary(organization), ["Source wallet", walletName(walletId)], ["Pay", money(Number(amount), asset)], ["Receive asset", receiveAsset], ["Network", network], ["Recipient address", address.trim()], ["Comment", comment]]}>
     <OrganizationField value={organization} onChange={id => { setOrganization(id); changeWallet(organizationWallets(id)[0]?.id ?? ""); }} />
     <WalletField label="Source wallet" value={walletId} options={organizationWallets(organization)} onChange={changeWallet} error={flow.errors.wallet} />

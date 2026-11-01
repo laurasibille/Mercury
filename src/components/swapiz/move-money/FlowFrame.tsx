@@ -5,7 +5,7 @@ import { ArrowLeft, Check, ShieldCheck } from "lucide-react";
 import { useSwapiz } from "../providers/SwapizProvider";
 import { GlassCard } from "../primitives/GlassCard";
 import { getDemoNow } from "@/lib/swapiz/demo-clock";
-import type { Asset, MoveOperation, OrganizationId } from "@/types/swapiz";
+import type { ApprovalRequestAmount, Asset, MoveOperation, OrganizationId } from "@/types/swapiz";
 import { newDemoId, organizationName, organizations, walletName } from "./flow-utils";
 
 export const controlClass = "w-full min-w-0 rounded-lg border border-[var(--color-border)] bg-[var(--color-canvas)] px-3 py-2.5 text-sm leading-5 text-[var(--color-ink)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-primary)] focus-visible:ring-2 focus-visible:ring-[var(--color-primary)] aria-invalid:border-[var(--color-negative)] disabled:opacity-50";
@@ -47,8 +47,9 @@ export function useFlow() {
 
 export function useCreateApproval() {
   const { dispatch } = useSwapiz();
-  return (operation: MoveOperation, organizationId: OrganizationId, title: string) => dispatch({ type: "approval/added", approval: {
+  return (operation: MoveOperation, organizationId: OrganizationId, title: string, requestedAmounts: ApprovalRequestAmount[] = []) => dispatch({ type: "approval/added", approval: {
     id: newDemoId(), date: getDemoNow().toISOString().slice(0, 10), organizationId, type: operation, title,
+    requestedAmounts: requestedAmounts.filter(item => Number.isFinite(item.amount) && item.amount > 0),
     initiator: "Kramer · demo", approvals: 0, requiredApprovals: 2, resolved: false,
   } });
 }

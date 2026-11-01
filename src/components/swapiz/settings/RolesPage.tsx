@@ -86,7 +86,7 @@ export function RolesPage() {
                   <td className="whitespace-nowrap px-4 py-4 font-medium">
                     {role.name}
                     {role.id === "owner" && (
-                      <span className="ml-2 rounded-full bg-[var(--color-primary-soft)] px-2 py-1 text-[11px] font-normal">
+                      <span className="ml-2 rounded-full bg-[var(--color-primary-soft)] px-2 py-1 text-xs font-normal">
                         Owner-only
                       </span>
                     )}
@@ -138,7 +138,7 @@ export function RolesPage() {
               <h3 className="text-sm font-medium">
                 {role.name}
                 {role.id === "owner" && (
-                  <span className="ml-2 rounded-full bg-[var(--color-primary-soft)] px-2 py-1 text-[11px] font-normal">
+                  <span className="ml-2 rounded-full bg-[var(--color-primary-soft)] px-2 py-1 text-xs font-normal">
                     Owner-only
                   </span>
                 )}

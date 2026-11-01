@@ -23,7 +23,7 @@ export function SwapFlow() {
   function changeWallet(id: string) { setWalletId(id); const first = walletAssets(id)[0] ?? "USDT"; setPay(first); setReceive(networkAssets(wallets.find(item => item.id === id)?.network ?? "").find(item => item !== first) ?? first); }
   return <FlowFrame title="Swap" description="Preview an illustrative exchange quote before requesting approval." flow={flow}
     onReview={() => flow.review({ wallet: !wallet ? "Choose a wallet." : undefined, amount: positiveAmountError(amount, available), quote: pay === receive || !supported.includes(receive) ? "Choose two different assets supported on this network." : undefined })}
-    onConfirm={() => createApproval("swap", organization, `Swap ${money(Number(amount), pay)} → ${money(quote, receive)} · ${walletName(walletId)}${comment ? ` · ${comment}` : ""}`)}
+    onConfirm={() => createApproval("swap", organization, `Swap ${money(Number(amount), pay)} → ${money(quote, receive)} · ${walletName(walletId)}${comment ? ` · ${comment}` : ""}`, [{ amount: Number(amount), asset: pay }])}
     summary={[organizationSummary(organization), ["Wallet", walletName(walletId)], ["Pay", money(Number(amount), pay)], ["Estimated receive", money(quote, receive)], ["Demo fee", "0.5% included in quote"], ["Comment", comment]]}>
     <OrganizationField value={organization} onChange={id => { setOrganization(id); changeWallet(organizationWallets(id)[0]?.id ?? ""); }} />
     <WalletField label="Wallet" value={walletId} options={organizationWallets(organization)} onChange={changeWallet} error={flow.errors.wallet} />

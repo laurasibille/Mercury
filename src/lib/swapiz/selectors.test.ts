@@ -34,9 +34,19 @@ describe("dashboard selectors", () => {
     expect(snapshot.upcomingObligations).toBe(40_000);
     expect(snapshot.pendingApprovalCount).toBe(1);
     expect(snapshot.pendingApprovalTotalEur).toBe(100);
+    expect(snapshot.pendingApprovalRequestedTotals).toEqual([]);
     expect(snapshot.attentionCount).toBe(1);
     expect(snapshot.assetBalances.map(item => item.usd)).toEqual([200_000]);
     expect(snapshot.transactions.every(item => item.organizationId === "marketing")).toBe(true);
+  });
+  it("totals structured requests by asset while preserving EUR totals and skipping invalid amounts", () => {
+    const data = { ...fixture, approvals: [
+      { ...fixture.approvals[0], requestedAmounts: [{ amount: 25, asset: "EUR" as const }, { amount: 100, asset: "USDT" as const }, { amount: 2, asset: "ETH" as const }, { amount: 0, asset: "BTC" as const }, { amount: Number.NaN, asset: "SOL" as const }] },
+      { ...fixture.approvals[0], id: "a3", requestedAmounts: [{ amount: 50, asset: "USDT" as const }] },
+    ] };
+    const snapshot = selectDashboardSnapshot(data, "marketing", range);
+    expect(snapshot.pendingApprovalTotalEur).toBe(225);
+    expect(snapshot.pendingApprovalRequestedTotals).toEqual([{ asset: "EUR", amount: 25 }, { asset: "USDT", amount: 150 }, { asset: "ETH", amount: 2 }]);
   });
   it("sums the latest balance per organization, independent of input order", () => {
     expect(selectDashboardSnapshot({ ...fixture, observations: [...fixture.observations].reverse() }, "all", range).totalBalance).toBe(800_000);

@@ -23,7 +23,7 @@ export function TransferFlow() {
   function changeSource(id: string) { setSource(id); setDestination(""); setAsset(walletAssets(id)[0] ?? "USDT"); }
   return <FlowFrame title="Internal transfer" description="Prepare a transfer between wallets on the same network." flow={flow}
     onReview={() => flow.review({ source: !sourceWallet ? "Choose a source wallet." : undefined, destination: !destinationWallet || disabledIds.includes(destination) ? "Choose a different wallet on the same network." : undefined, amount: positiveAmountError(amount, available) })}
-    onConfirm={() => createApproval("transfer", organization, `Transfer ${money(Number(amount), asset)} · ${walletName(source)} → ${walletName(destination)}${comment ? ` · ${comment}` : ""}`)}
+    onConfirm={() => createApproval("transfer", organization, `Transfer ${money(Number(amount), asset)} · ${walletName(source)} → ${walletName(destination)}${comment ? ` · ${comment}` : ""}`, [{ amount: Number(amount), asset }])}
     summary={[organizationSummary(organization), ["Source wallet", walletName(source)], ["Destination wallet", walletName(destination)], ["Amount", money(Number(amount), asset)], ["Network", sourceWallet?.network], ["Comment", comment]]}>
     <OrganizationField value={organization} onChange={id => { setOrganization(id); changeSource(organizationWallets(id)[0]?.id ?? ""); }} />
     <WalletField label="Source wallet" value={source} options={organizationWallets(organization)} onChange={changeSource} error={flow.errors.source} />

@@ -1,5 +1,5 @@
 import { swapizDemoData } from "@/data/swapiz-demo";
-import type { DashboardSnapshot, DateRange, Organization, ScopeId, SwapizDemoData, Transaction } from "@/types/swapiz";
+import type { ApprovalAsset, DashboardSnapshot, DateRange, Organization, ScopeId, SwapizDemoData, Transaction } from "@/types/swapiz";
 
 export function scopeOrganizationIds(scopeId: ScopeId, organizations: Organization[]): Organization["id"][] {
   const represented = organizations.filter(item => item.kind === "company" || organizations.some(parent => parent.kind === "company" && parent.id === item.parentId));
@@ -32,6 +32,13 @@ export function selectDashboardSnapshot(data: SwapizDemoData, scopeId: ScopeId, 
   const approvals = scopedRecords(data.approvals, ids, range).filter(item => !item.resolved);
   const alerts = scopedRecords(data.alerts, ids, range).filter(item => !item.resolved);
   const obligations = scopedRecords(data.obligations, ids, range);
+  const requestedTotals = new Map<ApprovalAsset, number>();
+  for (const approval of approvals) {
+    for (const requested of approval.requestedAmounts ?? []) {
+      if (!Number.isFinite(requested.amount) || requested.amount <= 0) continue;
+      requestedTotals.set(requested.asset, (requestedTotals.get(requested.asset) ?? 0) + requested.amount);
+    }
+  }
   const assetBalances = latestRecords(scopedRecords(data.assetBalances, ids, range), item => `${item.organizationId}:${item.asset}:${item.network}`);
   const totalBalance = latestRecords(observations, item => item.organizationId).reduce((sum, item) => sum + item.usd, 0);
   const unresolvedFrozenUsd = alerts.reduce((sum, item) => sum + (item.frozenUsd ?? 0), 0);
@@ -44,7 +51,8 @@ export function selectDashboardSnapshot(data: SwapizDemoData, scopeId: ScopeId, 
     inflow, outflow, netFlow: inflow - outflow,
     upcomingObligations: obligations.reduce((sum, item) => sum + item.usd, 0),
     pendingApprovalCount: approvals.length,
-    pendingApprovalTotalEur: approvals.reduce((sum, item) => sum + (item.amountEur ?? 0), 0),
+    pendingApprovalTotalEur: approvals.reduce((sum, item) => sum + (item.amountEur ?? 0) + (item.requestedAmounts ?? []).filter(amount => amount.asset === "EUR" && Number.isFinite(amount.amount) && amount.amount > 0).reduce((total, amount) => total + amount.amount, 0), 0),
+    pendingApprovalRequestedTotals: [...requestedTotals].map(([asset, amount]) => ({ asset, amount })),
     attentionCount: alerts.length,
     unresolvedFrozenUsd, unresolvedPendingOutboundUsd,
     observations, assetBalances, approvals, alerts, transactions, obligations,

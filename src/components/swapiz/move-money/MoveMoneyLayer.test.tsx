@@ -90,6 +90,7 @@ describe("global Move money", () => {
     expect(screen.getByText(/No funds have moved/)).toBeVisible();
     expect(records().approvals).toHaveLength(8);
     expect(records().approvals[0]).toMatchObject({ organizationId: "amazon", type: "send", resolved: false, approvals: 0 });
+    expect(records().approvals[0].requestedAmounts).toEqual([{ amount: 125, asset: "USDT" }]);
   });
 
   it("blocks nonpositive amounts and amounts above the source balance", async () => {
@@ -128,6 +129,7 @@ describe("global Move money", () => {
     await user.click(screen.getByRole("button", { name: "Review request" }));
     await user.click(screen.getByRole("button", { name: "Create demo approval" }));
     expect(records().approvals[0]).toMatchObject({ type: "transfer", organizationId: "amazon" });
+    expect(records().approvals[0].requestedAmounts).toEqual([{ amount: 75, asset: "USDT" }]);
   });
 
   it("updates a demo Swap quote with the amount and creates an approval", async () => {
@@ -138,7 +140,7 @@ describe("global Move money", () => {
     expect(screen.getByLabelText("Demo quote")).toHaveTextContent("199.00 USDC");
     await user.click(screen.getByRole("button", { name: "Review request" }));
     await user.click(screen.getByRole("button", { name: "Create demo approval" }));
-    expect(records().approvals[0]).toMatchObject({ type: "swap" });
+    expect(records().approvals[0]).toMatchObject({ type: "swap", requestedAmounts: [{ amount: 200, asset: "USDT" }] });
   });
 
   it("explains when the wallet network has no second asset available for Swap", async () => {
@@ -162,6 +164,7 @@ describe("global Move money", () => {
     await user.click(screen.getByRole("button", { name: "Create demo approval" }));
     expect(records().approvals[0].title).toContain("1 recipient");
     expect(records().approvals[0].title).not.toContain("90");
+    expect(records().approvals[0].requestedAmounts).toEqual([{ amount: 25, asset: "USDT" }]);
   });
 
   it("requires selection and lets an edited invalid CSV row join the batch", async () => {
@@ -195,5 +198,6 @@ describe("global Move money", () => {
     expect(screen.getByLabelText("Demo payment link")).toHaveTextContent("demo.swapiz.local");
     expect(screen.getByText(/No message has been sent/)).toBeVisible();
     expect(records().approvals[0]).toMatchObject({ type: "payment-link" });
+    expect(records().approvals[0].requestedAmounts).toEqual([{ amount: 250, asset: "USDT" }]);
   });
 });

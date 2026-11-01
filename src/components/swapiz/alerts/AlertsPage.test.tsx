@@ -17,8 +17,12 @@ function Metrics() {
   const { snapshot } = useSwapiz();
   return <KpiGrid snapshot={snapshot} />;
 }
+function NewSendApproval() {
+  const { dispatch } = useSwapiz();
+  return <button type="button" onClick={() => dispatch({ type: "move/open", operation: "send" })}>Create demo Send</button>;
+}
 function renderPage() {
-  return render(<SwapizProvider><SwapizShell><AlertsPage /><Metrics /></SwapizShell></SwapizProvider>);
+  return render(<SwapizProvider><SwapizShell><AlertsPage /><Metrics /><NewSendApproval /></SwapizShell></SwapizProvider>);
 }
 
 describe("Alerts route", () => {
@@ -83,6 +87,23 @@ describe("Alerts route", () => {
     expect(screen.getByText("No approval requests match these filters.")).toBeVisible();
     await user.selectOptions(screen.getByLabelText("Approval status"), "resolved");
     expect(screen.getByRole("button", { name: "Review Company wallet (cold) → Master · Amazon · USDT" })).toBeVisible();
+  });
+
+  it("shows a new requested crypto amount in the queue, detail, and KPI breakdown", async () => {
+    const user = userEvent.setup();
+    renderPage();
+    await user.click(screen.getByRole("button", { name: "Create demo Send" }));
+    await user.type(screen.getAllByLabelText("Amount")[0], "125");
+    await user.type(screen.getAllByLabelText("Recipient address")[0], "TQ7mo1hP5P3hZuDsHFB3B3ZPVF9D7D4kPa");
+    await user.click(screen.getByRole("button", { name: "Review request" }));
+    await user.click(screen.getByRole("button", { name: "Create demo approval" }));
+    await user.click(screen.getByRole("button", { name: "Return to dashboard" }));
+    const request = screen.getByRole("button", { name: /^Review Send 125/ });
+    expect(request.parentElement).toHaveTextContent("125 USDT");
+    expect(screen.getByRole("article", { name: "Pending approvals" })).toHaveTextContent("125 USDT");
+    expect(screen.getByRole("article", { name: "Pending approvals" })).toHaveTextContent("EUR");
+    await user.click(request);
+    expect(screen.getByRole("dialog")).toHaveTextContent("125 USDT");
   });
 
   it("supports keyboard tabs and restores detail-trigger focus after Escape", async () => {
