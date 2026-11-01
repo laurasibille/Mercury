@@ -1,8 +1,8 @@
 {
   "version": 1,
   "project": {
-    "name": "app",
-    "productType": null,
+    "name": "Swapiz treasury prototype",
+    "productType": "Client-side treasury product prototype",
     "stack": [
       "nextjs",
       "react",
@@ -15,7 +15,7 @@
       "src/styles/mercury-tokens.css"
     ],
     "components": [
-      "src/components/mercury",
+      "src/components/swapiz",
       "src/components/ui/sidebar.tsx"
     ],
     "assets": [],
@@ -24,7 +24,7 @@
     ]
   },
   "design": {
-    "colorMode": "light",
+    "colorMode": "light-dark",
     "colors": {
       "sidebar": "#fbfcfd",
       "primary": "#5266eb",
@@ -58,8 +58,8 @@
     ],
     "preferredPrimitives": [
       "shadcn/sidebar",
-      "mercury/Button",
-      "mercury/Card"
+      "swapiz/GlassCard",
+      "swapiz/StatusBadge"
     ],
     "patterns": [
       "collapsible navigation rail",
@@ -68,13 +68,16 @@
   },
   "constraints": {
     "must": [
-      "Preserve Mercury product identity and copy",
+      "Present Swapiz as a treasury prototype using the Mercury design system",
       "Use Mercury semantic tokens",
-      "Keep navigation labels at 14px"
+      "Keep navigation labels at 14px",
+      "Limit glass surfaces to data and movement-flow surfaces",
+      "Keep product operations explicitly demo-only"
     ],
     "avoid": [
       "Generic shadcn demo content",
-      "Hardcoded sidebar background outside tokens"
+      "Hardcoded sidebar background outside tokens",
+      "Beige or orange page backgrounds"
     ]
   },
   "decisions": [
@@ -82,6 +85,36 @@
       "date": "2026-10-30",
       "decision": "Adopt the sidebar-08 shell with a 240px expanded sidebar and 56px icon rail.",
       "reason": "User-requested navigation density and collapsible layout while preserving Mercury content."
+    },
+    {
+      "date": "2026-10-31",
+      "decision": "Use a four-item sidebar: Home, Alerts, Companies, and Transactions.",
+      "reason": "Keep primary navigation focused on the Swapiz treasury workflows."
+    },
+    {
+      "date": "2026-10-31",
+      "decision": "Keep the Move money action and user menu in the persistent topbar on every dashboard route.",
+      "reason": "Make movement entry and account navigation available throughout the shared shell."
+    },
+    {
+      "date": "2026-10-31",
+      "decision": "Limit glass styling to data surfaces, analytical widgets, major popovers, and movement flows.",
+      "reason": "Preserve Mercury's clear navigation and form structure while retaining restrained depth."
+    },
+    {
+      "date": "2026-10-31",
+      "decision": "Drive dashboard widgets from the shared organization and date-range filters.",
+      "reason": "Keep balances, charts, alerts, assets, and transactions scoped consistently."
+    },
+    {
+      "date": "2026-10-31",
+      "decision": "Present Send, Receive, Transfer, Swap, Mass Pay, and Payment Link in a full-screen movement layer.",
+      "reason": "Give movement requests a focused flow while retaining the originating route and filters."
+    },
+    {
+      "date": "2026-10-31",
+      "decision": "Keep navigation labels at 14px / 20px.",
+      "reason": "Maintain the approved Mercury hierarchy and readable compact density."
     }
   ],
   "evidence": [
