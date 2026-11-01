@@ -38,6 +38,12 @@ function renderShell() {
 }
 
 describe("shared dashboard shell", () => {
+  it("provides exactly one main landmark for route content", () => {
+    renderShell();
+    expect(screen.getAllByRole("main")).toHaveLength(1);
+    expect(within(screen.getByRole("main")).getByRole("heading", { name: "Route content" })).toBeVisible();
+  });
+
   it("keeps top navigation on an opaque surface without backdrop blur", () => {
     renderShell();
     const header = screen.getByRole("banner");

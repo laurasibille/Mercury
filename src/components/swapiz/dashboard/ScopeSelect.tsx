@@ -44,7 +44,7 @@ export function ScopeSelect({ value, onChange }: { value: ScopeId; onChange: (sc
     </Popover.Trigger>
     <Popover.Portal>
       <Popover.Positioner align="end" sideOffset={8} collisionPadding={12} className="z-50">
-        <Popover.Popup aria-label="Organization scope" initialFocus={selectedRef} className="swapiz-glass-strong w-72 max-w-[calc(100vw-24px)] p-1.5 text-[var(--color-ink)] outline-none">
+        <Popover.Popup aria-label="Organization scope" initialFocus={selectedRef} className="swapiz-glass-strong w-72 max-w-[calc(100vw-24px)] p-1.5 text-[var(--color-ink)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-primary)]">
           <div role="listbox" aria-label="Organization scope" onKeyDown={navigate} className="max-h-[min(480px,70dvh)] overflow-y-auto">
             {options.map(item => <button
               key={item.id} ref={value === item.id ? selectedRef : undefined} type="button" role="option"
@@ -54,7 +54,7 @@ export function ScopeSelect({ value, onChange }: { value: ScopeId; onChange: (sc
               className={`flex w-full items-center gap-2 rounded-lg py-2 pr-3 text-left text-sm leading-5 hover:bg-[var(--color-surface)] focus-visible:bg-[var(--color-surface)] ${item.parent ? "pl-7" : "pl-3"}`}
             >
               <span className="flex-1"><span className="block">{item.name}</span>{item.parent && <span id={`${contextId}-${item.id}`} className="block text-xs leading-[18px] text-[var(--color-ink-muted)]">Department · {item.parent}</span>}</span>
-              {value === item.id && <Check aria-hidden="true" className="size-4 text-[var(--color-primary)]" />}
+              {value === item.id && <Check aria-hidden="true" className="size-4 text-[var(--swapiz-info-ink)]" />}
             </button>)}
           </div>
         </Popover.Popup>

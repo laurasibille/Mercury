@@ -30,7 +30,7 @@ export function MoveMoneyLayer() {
   return <Dialog.Root open={state.moveMoney.open} onOpenChange={open => { if (!open) dispatch({ type: "move/close" }); }}>
     <Dialog.Portal>
       <Dialog.Backdrop className="fixed inset-0 z-[80] bg-[var(--swapiz-canvas)]" />
-      <Dialog.Popup className="fixed inset-0 z-[81] flex h-[100dvh] min-h-[100dvh] w-full flex-col overflow-y-auto bg-[var(--swapiz-canvas)] text-[var(--color-ink)] outline-none" initialFocus={element => element === "touch" ? true : document.querySelector<HTMLElement>('[data-move-close]') ?? true} finalFocus={() => origin.current?.isConnected ? origin.current : true}>
+      <Dialog.Popup className="fixed inset-0 z-[81] flex h-[100dvh] min-h-[100dvh] w-full flex-col overflow-y-auto bg-[var(--swapiz-canvas)] text-[var(--color-ink)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-primary)]" initialFocus={element => element === "touch" ? true : document.querySelector<HTMLElement>('[data-move-close]') ?? true} finalFocus={() => origin.current?.isConnected ? origin.current : true}>
         <Dialog.Title className="sr-only">Move money</Dialog.Title>
         <Dialog.Description className="sr-only">Prepare a demo money movement request. No real funds are moved.</Dialog.Description>
         <div className="sticky top-0 z-10 flex shrink-0 items-center justify-between border-b border-[var(--color-border)] bg-[var(--swapiz-canvas)] px-5 py-4 sm:px-9">

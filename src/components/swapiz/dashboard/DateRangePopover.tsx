@@ -41,17 +41,17 @@ export function DateRangePopover({ value, onChange }: { value: DateRange; onChan
     </Popover.Trigger>
     <Popover.Portal>
       <Popover.Positioner align="end" sideOffset={8} collisionPadding={12} className="z-50">
-        <Popover.Popup aria-label="Date range" className="swapiz-glass-strong w-[540px] max-w-[calc(100vw-24px)] max-h-[calc(100dvh-24px)] overflow-y-auto text-[var(--color-ink)] outline-none">
+        <Popover.Popup aria-label="Date range" className="swapiz-glass-strong w-[540px] max-w-[calc(100vw-24px)] max-h-[min(calc(100dvh-24px),var(--available-height))] overflow-y-auto text-[var(--color-ink)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-primary)]">
           <Popover.Title className="sr-only">Date range</Popover.Title>
           <div className="grid grid-cols-1 min-[480px]:grid-cols-[168px_1fr]">
             <div aria-label="Date presets" className="flex flex-col gap-1 border-b border-[var(--color-border)] p-3 min-[480px]:border-b-0 min-[480px]:border-r">
               {presets.map(preset => {
                 const range = getPresetRange(preset);
-                return <button key={preset} type="button" aria-pressed={draft.preset === preset} onClick={() => { onChange(range); setOpen(false); }} className="flex items-center justify-between gap-2 rounded-lg px-3 py-2 text-left text-sm leading-5 hover:bg-[var(--color-surface)] aria-pressed:bg-[var(--color-primary-soft)] aria-pressed:text-[var(--color-primary)]">
+                return <button key={preset} type="button" aria-pressed={draft.preset === preset} onClick={() => { onChange(range); setOpen(false); }} className="flex items-center justify-between gap-2 rounded-lg px-3 py-2 text-left text-sm leading-5 hover:bg-[var(--color-surface)] aria-pressed:bg-[var(--color-primary-soft)] aria-pressed:text-[var(--swapiz-info-ink)]">
                   {range.label}{draft.preset === preset && <Check aria-hidden="true" className="size-3.5 shrink-0" />}
                 </button>;
               })}
-              <button type="button" aria-pressed={draft.preset === "custom"} onClick={() => { setDraft({ ...draft, preset: "custom" }); fromRef.current?.focus(); }} className="rounded-lg px-3 py-2 text-left text-sm leading-5 hover:bg-[var(--color-surface)] aria-pressed:bg-[var(--color-primary-soft)] aria-pressed:text-[var(--color-primary)]">Custom range</button>
+              <button type="button" aria-pressed={draft.preset === "custom"} onClick={() => { setDraft({ ...draft, preset: "custom" }); fromRef.current?.focus(); }} className="rounded-lg px-3 py-2 text-left text-sm leading-5 hover:bg-[var(--color-surface)] aria-pressed:bg-[var(--color-primary-soft)] aria-pressed:text-[var(--swapiz-info-ink)]">Custom range</button>
             </div>
             <div className="min-w-0 p-5">
               <h2 className="mb-4 text-sm font-medium leading-5">Custom range</h2>

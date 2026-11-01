@@ -31,11 +31,13 @@ describe("Transactions page", () => {
   it("filters by type and searches transaction IDs before opening accessible details", async () => {
     const user = userEvent.setup();
     renderPage();
-    screen.getByRole("tab", { name: "Send" }).focus();
+    screen.getByRole("radio", { name: "Send" }).focus();
     await user.keyboard("{ArrowRight}");
-    expect(screen.getByRole("tab", { name: "Receive" })).toHaveFocus();
-    expect(screen.getByRole("tab", { name: "Receive" })).toHaveAttribute("aria-selected", "true");
-    await user.click(screen.getByRole("tab", { name: "Send" }));
+    expect(screen.getByRole("radio", { name: "Receive" })).toHaveFocus();
+    expect(screen.getByRole("radio", { name: "Receive" })).toHaveAttribute("aria-checked", "true");
+    await user.keyboard("{ArrowUp}");
+    expect(screen.getByRole("radio", { name: "Send" })).toHaveFocus();
+    expect(screen.getByRole("radio", { name: "Send" })).toHaveAttribute("aria-checked", "true");
     const table = screen.getByRole("table", { name: "Transactions" });
     expect(within(table).getAllByRole("row").slice(1).every(row => row.textContent?.includes("Send"))).toBe(true);
     await user.type(screen.getByRole("searchbox", { name: "Search transactions" }), "183796");

@@ -18,7 +18,7 @@ export function SettingsPage() {
     setSaved(true);
   }
 
-  return <main className="mx-auto w-full min-w-0 max-w-[1120px] space-y-6 px-4 py-7 text-[var(--color-ink)] md:px-6 lg:px-8">
+  return <div className="mx-auto w-full min-w-0 max-w-[1120px] space-y-6 px-4 py-7 text-[var(--color-ink)] md:px-6 lg:px-8">
     <header><h1 className="text-[28px] font-normal leading-9 tracking-[-0.02em]">Settings</h1><p className="mt-1 text-xs leading-[18px] text-[var(--color-ink-muted)]">Manage workspace preferences and security · Demo settings</p></header>
     <div role="status" aria-live="polite" className={saved ? "rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] px-4 py-3 text-sm" : "sr-only"}>{saved ? "Settings updated in this demo." : ""}</div>
     <form onSubmit={save} className="space-y-5">
@@ -60,7 +60,7 @@ export function SettingsPage() {
       </section>
       <div className="flex justify-end"><button type="submit" className="min-h-10 rounded-lg bg-[var(--color-primary)] px-4 text-sm font-medium text-white hover:bg-[var(--color-primary-hover)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-primary)]">Save settings</button></div>
     </form>
-  </main>;
+  </div>;
 }
 
 function Channel({ name, detail, checked, onChange, disabled = false }: { name: string; detail: string; checked: boolean; onChange: (checked: boolean) => void; disabled?: boolean }) {

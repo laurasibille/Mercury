@@ -19,7 +19,7 @@ export function SwapizSidebar() {
   const { setOpenMobile } = useSidebar();
   const attentionCount = snapshot.attentionCount + snapshot.pendingApprovalCount;
 
-  return <Sidebar collapsible="icon">
+  return <Sidebar collapsible="icon" role="complementary" aria-label="Workspace sidebar">
     <SidebarHeader className="relative h-16 justify-center border-b border-sidebar-border px-4 group-data-[collapsible=icon]:px-2">
       <div className="flex items-center gap-2 overflow-hidden">
         <span aria-hidden="true" className="grid size-8 shrink-0 place-items-center rounded-lg bg-[var(--color-primary)] text-base font-semibold text-white">S</span>

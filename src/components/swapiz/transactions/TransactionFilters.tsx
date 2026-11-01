@@ -38,18 +38,18 @@ interface TransactionFiltersProps {
 
 export function TransactionFilters({ query, type, organizationId, status, dateRange, onQueryChange, onTypeChange, onOrganizationChange, onStatusChange, onDateRangeChange }: TransactionFiltersProps) {
   function navigateTypes(event: KeyboardEvent<HTMLDivElement>) {
-    if (!["ArrowLeft", "ArrowRight", "Home", "End"].includes(event.key)) return;
-    const tabs = [...event.currentTarget.querySelectorAll<HTMLButtonElement>("[role='tab']")];
+    if (!["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown", "Home", "End"].includes(event.key)) return;
+    const tabs = [...event.currentTarget.querySelectorAll<HTMLButtonElement>("[role='radio']")];
     const index = tabs.indexOf(document.activeElement as HTMLButtonElement);
     if (index < 0) return;
     event.preventDefault();
-    const next = event.key === "Home" ? 0 : event.key === "End" ? tabs.length - 1 : (index + (event.key === "ArrowRight" ? 1 : -1) + tabs.length) % tabs.length;
+    const next = event.key === "Home" ? 0 : event.key === "End" ? tabs.length - 1 : (index + (["ArrowRight", "ArrowDown"].includes(event.key) ? 1 : -1) + tabs.length) % tabs.length;
     tabs[next]?.focus();
     tabs[next]?.click();
   }
   return <div className="space-y-4">
-    <div role="tablist" aria-label="Transaction type" onKeyDown={navigateTypes} className="flex min-w-0 gap-1 overflow-x-auto border-b border-[var(--color-border)]">
-      {types.map(item => <button key={item.value} type="button" role="tab" tabIndex={type === item.value ? 0 : -1} aria-selected={type === item.value} onClick={() => onTypeChange(item.value)} className={`min-h-11 shrink-0 border-b-2 px-3 text-sm focus-visible:outline-2 focus-visible:outline-[var(--color-primary)] ${type === item.value ? "border-[var(--color-primary)] font-medium text-[var(--color-ink)]" : "border-transparent text-[var(--color-ink-muted)] hover:text-[var(--color-ink)]"}`}>{item.label}</button>)}
+    <div role="radiogroup" aria-label="Transaction type" onKeyDown={navigateTypes} className="flex min-w-0 gap-1 overflow-x-auto border-b border-[var(--color-border)]">
+      {types.map(item => <button key={item.value} type="button" role="radio" tabIndex={type === item.value ? 0 : -1} aria-checked={type === item.value} onClick={() => onTypeChange(item.value)} className={`min-h-11 shrink-0 border-b-2 px-3 text-sm focus-visible:outline-2 focus-visible:outline-[var(--color-primary)] ${type === item.value ? "border-[var(--color-primary)] font-medium text-[var(--color-ink)]" : "border-transparent text-[var(--color-ink-muted)] hover:text-[var(--color-ink)]"}`}>{item.label}</button>)}
     </div>
     <div className="grid min-w-0 gap-3 sm:grid-cols-2 xl:grid-cols-[minmax(220px,1.4fr)_minmax(150px,0.8fr)_minmax(150px,0.8fr)_minmax(150px,0.8fr)]">
       <label className="relative min-w-0"><span className="sr-only">Search transactions</span><input type="search" aria-label="Search transactions" value={query} onChange={event => onQueryChange(event.target.value)} placeholder="Search ID, wallet, or source" className={`${controlClass} w-full pl-3`} /></label>

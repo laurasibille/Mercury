@@ -158,7 +158,7 @@ export function UsersPage() {
   }
 
   return (
-    <main className="mx-auto w-full min-w-0 max-w-[1600px] space-y-6 px-4 py-7 text-[var(--color-ink)] md:px-6 lg:px-8">
+    <div className="mx-auto w-full min-w-0 max-w-[1600px] space-y-6 px-4 py-7 text-[var(--color-ink)] md:px-6 lg:px-8">
       <header className="flex flex-wrap items-end justify-between gap-4">
         <div>
           <h1 className="text-[28px] font-normal leading-9 tracking-[-0.02em]">
@@ -273,7 +273,7 @@ export function UsersPage() {
                       <div className="flex items-center gap-3">
                         <span
                           aria-hidden="true"
-                          className="grid size-9 shrink-0 place-items-center rounded-full bg-[var(--color-primary-soft)] text-xs font-semibold text-[var(--color-primary)]"
+                          className="grid size-9 shrink-0 place-items-center rounded-full bg-[var(--color-primary-soft)] text-xs font-semibold text-[var(--swapiz-info-ink)]"
                         >
                           {person.initials}
                         </span>
@@ -321,7 +321,7 @@ export function UsersPage() {
                         <button
                           type="button"
                           onClick={() => openEdit(person)}
-                          className="min-h-9 rounded-md px-2 text-xs font-medium text-[var(--color-primary)] hover:bg-[var(--color-primary-soft)] focus-visible:outline-2 focus-visible:outline-[var(--color-primary)]"
+                          className="min-h-9 rounded-md px-2 text-xs font-medium text-[var(--swapiz-info-ink)] hover:bg-[var(--color-primary-soft)] focus-visible:outline-2 focus-visible:outline-[var(--color-primary)]"
                           aria-label={`Edit ${person.name}`}
                         >
                           Edit
@@ -365,7 +365,7 @@ export function UsersPage() {
       <Dialog.Root open={dialog === "add" || dialog === "edit"} onOpenChange={(open) => { if (!open) closeDialog(); }}>
         {(dialog === "add" || dialog === "edit") && <Dialog.Portal>
           <Dialog.Backdrop className="fixed inset-0 z-50 bg-black/40" />
-          <Dialog.Popup initialFocus={type => type === "touch" ? true : nameInput.current ?? true} finalFocus={restoreDialogFocus} className="fixed top-1/2 left-1/2 z-50 max-h-[calc(100dvh-32px)] w-[calc(100%-32px)] max-w-lg -translate-x-1/2 -translate-y-1/2 overflow-y-auto rounded-2xl border border-[var(--color-border)] bg-[var(--color-canvas)] p-5 text-[var(--color-ink)] shadow-xl outline-none md:p-6">
+          <Dialog.Popup initialFocus={type => type === "touch" ? true : nameInput.current ?? true} finalFocus={restoreDialogFocus} className="fixed top-1/2 left-1/2 z-50 max-h-[calc(100dvh-32px)] w-[calc(100%-32px)] max-w-lg -translate-x-1/2 -translate-y-1/2 overflow-y-auto rounded-2xl border border-[var(--color-border)] bg-[var(--color-canvas)] p-5 text-[var(--color-ink)] shadow-xl focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-primary)] md:p-6">
           <form
             onSubmit={saveUser}
             className="w-full"
@@ -507,7 +507,7 @@ export function UsersPage() {
       <Dialog.Root open={dialog === "delete" && Boolean(selected)} onOpenChange={(open) => { if (!open) closeDialog(); }}>
       {dialog === "delete" && selected ? <Dialog.Portal>
         <Dialog.Backdrop className="fixed inset-0 z-50 bg-black/40" />
-        <Dialog.Popup initialFocus={true} finalFocus={restoreDialogFocus} className="fixed top-1/2 left-1/2 z-50 max-h-[calc(100dvh-32px)] w-[calc(100%-32px)] max-w-md -translate-x-1/2 -translate-y-1/2 overflow-y-auto rounded-2xl border border-[var(--color-border)] bg-[var(--color-canvas)] p-6 text-[var(--color-ink)] shadow-xl outline-none">
+        <Dialog.Popup initialFocus={true} finalFocus={restoreDialogFocus} className="fixed top-1/2 left-1/2 z-50 max-h-[calc(100dvh-32px)] w-[calc(100%-32px)] max-w-md -translate-x-1/2 -translate-y-1/2 overflow-y-auto rounded-2xl border border-[var(--color-border)] bg-[var(--color-canvas)] p-6 text-[var(--color-ink)] shadow-xl focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-primary)]">
             <Dialog.Title className="text-lg font-medium">Delete user</Dialog.Title>
             <Dialog.Description className="mt-2 text-sm text-[var(--color-ink-secondary)]">
               Remove {selected.name} from this demo workspace?
@@ -542,7 +542,7 @@ export function UsersPage() {
             <div className="flex min-w-0 items-center gap-3">
               <span
                 aria-hidden="true"
-                className="grid size-9 shrink-0 place-items-center rounded-full bg-[var(--color-primary-soft)] text-xs font-semibold text-[var(--color-primary)]"
+                className="grid size-9 shrink-0 place-items-center rounded-full bg-[var(--color-primary-soft)] text-xs font-semibold text-[var(--swapiz-info-ink)]"
               >
                 {person.initials}
               </span>
@@ -580,7 +580,7 @@ export function UsersPage() {
               <button
                 type="button"
                 onClick={() => openEdit(person)}
-                className="min-h-9 flex-1 rounded-md text-sm font-medium text-[var(--color-primary)] hover:bg-[var(--color-primary-soft)]"
+                className="min-h-9 flex-1 rounded-md text-sm font-medium text-[var(--swapiz-info-ink)] hover:bg-[var(--color-primary-soft)]"
                 aria-label={`Edit ${person.name}`}
               >
                 Edit
@@ -600,7 +600,7 @@ export function UsersPage() {
         ))}
       </div>
       <style>{`@media (max-width: 767px) { [aria-label="User filters"] > .space-y-3 { display: none; } [aria-label="Team users"] > .overflow-x-auto { display: none; } }`}</style>
-    </main>
+    </div>
   );
 }
 

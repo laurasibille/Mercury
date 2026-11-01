@@ -15,7 +15,7 @@
       "src/styles/mercury-tokens.css"
     ],
     "components": [
-      "src/components/mercury",
+      "src/components/swapiz",
       "src/components/ui/sidebar.tsx"
     ],
     "assets": [],
@@ -58,8 +58,8 @@
     ],
     "preferredPrimitives": [
       "shadcn/sidebar",
-      "mercury/Button",
-      "mercury/Card"
+      "swapiz/GlassCard",
+      "swapiz/StatusBadge"
     ],
     "patterns": [
       "collapsible navigation rail",

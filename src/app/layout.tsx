@@ -9,8 +9,8 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Mercury Dashboard",
-  description: "Interactive Mercury dashboard demo",
+  title: "Swapiz Treasury",
+  description: "Swapiz treasury prototype using the Mercury design system. Client-side demo only.",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

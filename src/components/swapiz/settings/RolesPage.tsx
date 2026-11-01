@@ -25,7 +25,7 @@ export function RolesPage() {
   }
 
   return (
-    <main className="mx-auto w-full min-w-0 max-w-[1280px] space-y-6 overflow-x-clip px-4 py-7 text-[var(--color-ink)] md:px-6 lg:px-8">
+    <div className="mx-auto w-full min-w-0 max-w-[1280px] space-y-6 overflow-x-clip px-4 py-7 text-[var(--color-ink)] md:px-6 lg:px-8">
       <header>
         <h1 className="text-[28px] font-normal leading-9 tracking-[-0.02em]">
           Roles
@@ -115,7 +115,7 @@ export function RolesPage() {
                           current === role.id ? null : role.id,
                         )
                       }
-                      className="min-h-9 whitespace-nowrap rounded-md px-2 text-xs font-medium text-[var(--color-primary)] hover:bg-[var(--color-primary-soft)] focus-visible:outline-2 focus-visible:outline-[var(--color-primary)]"
+                      className="min-h-9 whitespace-nowrap rounded-md px-2 text-xs font-medium text-[var(--swapiz-info-ink)] hover:bg-[var(--color-primary-soft)] focus-visible:outline-2 focus-visible:outline-[var(--color-primary)]"
                     >
                       {expanded === role.id
                         ? "Hide permissions"
@@ -165,7 +165,7 @@ export function RolesPage() {
               onClick={() =>
                 setExpanded((current) => (current === role.id ? null : role.id))
               }
-              className="mt-3 min-h-9 rounded-md px-2 text-xs font-medium text-[var(--color-primary)] hover:bg-[var(--color-primary-soft)] focus-visible:outline-2 focus-visible:outline-[var(--color-primary)]"
+              className="mt-3 min-h-9 rounded-md px-2 text-xs font-medium text-[var(--swapiz-info-ink)] hover:bg-[var(--color-primary-soft)] focus-visible:outline-2 focus-visible:outline-[var(--color-primary)]"
             >
               {expanded === role.id ? "Hide permissions" : "Edit permissions"}
             </button>
@@ -198,7 +198,7 @@ export function RolesPage() {
                 <button
                   type="button"
                   onClick={() => setExpanded(null)}
-                  className="min-h-9 rounded-md px-2 text-sm text-[var(--color-primary)]"
+                  className="min-h-9 rounded-md px-2 text-sm text-[var(--swapiz-info-ink)]"
                 >
                   Done
                 </button>
@@ -246,6 +246,6 @@ export function RolesPage() {
           );
         })()}
       <style>{`@media (max-width: 639px) { [aria-label="Workspace roles"] > .overflow-x-auto { display: none; } }`}</style>
-    </main>
+    </div>
   );
 }

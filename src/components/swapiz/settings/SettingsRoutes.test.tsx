@@ -16,7 +16,9 @@ beforeEach(() => {
 afterEach(cleanup);
 
 function renderPage(page: React.ReactNode) {
-  return render(<SwapizProvider><SwapizShell>{page}</SwapizShell></SwapizProvider>);
+  const view = render(<SwapizProvider><SwapizShell>{page}</SwapizShell></SwapizProvider>);
+  expect(screen.getAllByRole("main")).toHaveLength(1);
+  return view;
 }
 
 describe("Settings, Users, and Roles routes", () => {

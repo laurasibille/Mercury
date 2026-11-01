@@ -6,7 +6,7 @@ import { ChevronDown, Monitor, Moon, Settings, ShieldCheck, Sun, Users } from "l
 import { useSwapiz } from "../providers/SwapizProvider";
 import type { SwapizState } from "@/lib/swapiz/reducer";
 
-const itemClass = "flex cursor-default items-center gap-2 rounded-md px-3 py-2 text-sm leading-5 outline-none data-highlighted:bg-[var(--color-surface)] focus-visible:ring-2 focus-visible:ring-[var(--color-primary)]";
+const itemClass = "flex cursor-default items-center gap-2 rounded-md px-3 py-2 text-sm leading-5 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-primary)] data-highlighted:bg-[var(--color-surface)] focus-visible:ring-2 focus-visible:ring-[var(--color-primary)]";
 const themes: { value: SwapizState["theme"]; label: string; icon: typeof Sun }[] = [
   { value: "light", label: "Light", icon: Sun },
   { value: "dark", label: "Dark", icon: Moon },
@@ -22,7 +22,7 @@ export function UserMenu() {
     </Menu.Trigger>
     <Menu.Portal>
       <Menu.Positioner side="bottom" align="end" sideOffset={8} className="z-50">
-        <Menu.Popup className="swapiz-glass-strong w-60 p-1.5 text-[var(--color-ink)] outline-none">
+        <Menu.Popup className="swapiz-glass-strong w-60 p-1.5 text-[var(--color-ink)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-primary)]">
           <div className="border-b border-[var(--color-border)] px-3 pb-3 pt-2 text-[13px] text-[var(--color-ink-muted)]">kramer@starclick.co</div>
           <Menu.Item render={<Link href="/dashboard/settings" />} className={itemClass}><Settings className="size-4" aria-hidden="true" />Settings</Menu.Item>
           <Menu.Group>

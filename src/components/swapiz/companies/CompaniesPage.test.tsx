@@ -5,6 +5,7 @@ import { swapizDemoData } from "@/data/swapiz-demo";
 import { SwapizProvider } from "../providers/SwapizProvider";
 import { CompaniesPage } from "./CompaniesPage";
 import { CompanyDetailPage } from "./CompanyDetailPage";
+import { dynamicParams, generateStaticParams } from "@/app/dashboard/companies/[companyId]/page";
 
 beforeEach(() => {
   localStorage.clear();
@@ -13,7 +14,8 @@ beforeEach(() => {
 afterEach(cleanup);
 
 function renderDetail(companyId = "amazon") {
-  return render(<SwapizProvider><CompanyDetailPage companyId={companyId} /></SwapizProvider>);
+  const company = swapizDemoData.organizations.find(item => item.id === companyId && item.kind === "company")!;
+  return render(<SwapizProvider><CompanyDetailPage company={company} /></SwapizProvider>);
 }
 
 describe("Companies", () => {
@@ -154,9 +156,8 @@ describe("Companies", () => {
     expect(screen.getByText("No exchange rules recorded for OpenAI.")).toBeVisible();
   });
 
-  it("offers a working return link for unknown company ids", () => {
-    renderDetail("unknown");
-    expect(screen.getByRole("heading", { name: "Company not found" })).toBeVisible();
-    expect(screen.getByRole("link", { name: "Back to Companies" })).toHaveAttribute("href", "/dashboard/companies");
+  it("exports only known companies and disables unknown company routes", () => {
+    expect(dynamicParams).toBe(false);
+    expect(generateStaticParams()).toEqual([{ companyId: "amazon" }, { companyId: "openai" }, { companyId: "hooli" }]);
   });
 });

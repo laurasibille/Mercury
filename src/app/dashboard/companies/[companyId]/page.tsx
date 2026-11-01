@@ -1,5 +1,6 @@
 import { CompanyDetailPage } from "@/components/swapiz/companies/CompanyDetailPage";
 import { swapizDemoData } from "@/data/swapiz-demo";
+import { notFound } from "next/navigation";
 
 export const dynamicParams = false;
 
@@ -9,5 +10,7 @@ export function generateStaticParams() {
 
 export default async function Page({ params }: { params: Promise<{ companyId: string }> }) {
   const { companyId } = await params;
-  return <CompanyDetailPage key={companyId} companyId={companyId} />;
+  const company = swapizDemoData.organizations.find(item => item.id === companyId && item.kind === "company");
+  if (!company) notFound();
+  return <CompanyDetailPage key={companyId} company={company} />;
 }
