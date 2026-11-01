@@ -74,10 +74,17 @@ describe("Settings, Users, and Roles routes", () => {
     await user.click(within(editDialog).getByRole("button", { name: "Save user" }));
     expect(screen.getByRole("cell", { name: /Morgan L\./ })).toBeVisible();
 
-    await user.click(within(screen.getByRole("table", { name: "Users" })).getByRole("button", { name: "Delete Morgan L." }));
+    const deleteTrigger = within(screen.getByRole("table", { name: "Users" })).getByRole("button", { name: "Delete Morgan L." });
+    await user.click(deleteTrigger);
+    const cancelDialog = screen.getByRole("dialog", { name: "Delete user" });
+    await user.click(within(cancelDialog).getByRole("button", { name: "Cancel" }));
+    expect(deleteTrigger).toHaveFocus();
+
+    await user.click(deleteTrigger);
     const deleteDialog = screen.getByRole("dialog", { name: "Delete user" });
     await user.click(within(deleteDialog).getByRole("button", { name: "Delete user" }));
     expect(screen.queryByRole("cell", { name: /Morgan L\./ })).not.toBeInTheDocument();
+    await waitFor(() => expect(screen.getByRole("button", { name: "Add user" })).toHaveFocus());
   });
 
   it("edits all user scopes without losing Anna's existing assignments", async () => {

@@ -57,6 +57,8 @@ export function UsersPage() {
   const [notice, setNotice] = useState("");
   const dialogOrigin = useRef<HTMLElement | null>(null);
   const nameInput = useRef<HTMLInputElement>(null);
+  const addUserButton = useRef<HTMLButtonElement>(null);
+  const deleteConfirmed = useRef(false);
   const selected = users.find((user) => user.id === selectedId) ?? null;
   const filtered = useMemo(() => {
     const term = query.trim().toLowerCase();
@@ -78,12 +80,14 @@ export function UsersPage() {
   }, [query, roleFilter, users]);
 
   function openAdd() {
+    deleteConfirmed.current = false;
     dialogOrigin.current = document.activeElement as HTMLElement;
     setSelectedId(null);
     setDraft(emptyDraft);
     setDialog("add");
   }
   function openEdit(user: User) {
+    deleteConfirmed.current = false;
     dialogOrigin.current = document.activeElement as HTMLElement;
     setSelectedId(user.id);
     setDraft({
@@ -97,6 +101,7 @@ export function UsersPage() {
     setDialog("edit");
   }
   function openDelete(user: User) {
+    deleteConfirmed.current = false;
     dialogOrigin.current = document.activeElement as HTMLElement;
     setSelectedId(user.id);
     setDialog("delete");
@@ -131,10 +136,15 @@ export function UsersPage() {
   }
   function deleteUser() {
     if (selected) {
+      deleteConfirmed.current = true;
       dispatch({ type: "user/deleted", userId: selected.id });
       setNotice(`${selected.name} removed from this demo.`);
     }
     closeDialog();
+  }
+  function restoreDialogFocus() {
+    if (deleteConfirmed.current) return addUserButton.current?.isConnected ? addUserButton.current : true;
+    return dialogOrigin.current?.isConnected ? dialogOrigin.current : true;
   }
   function toggleScope(scopeId: ScopeId, checked: boolean) {
     setDraft((current) => {
@@ -160,6 +170,7 @@ export function UsersPage() {
         </div>
         <button
           type="button"
+          ref={addUserButton}
           onClick={openAdd}
           className="min-h-10 rounded-lg bg-[var(--color-primary)] px-4 text-sm font-medium text-white hover:bg-[var(--color-primary-hover)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-primary)]"
         >
@@ -354,7 +365,7 @@ export function UsersPage() {
       <Dialog.Root open={dialog === "add" || dialog === "edit"} onOpenChange={(open) => { if (!open) closeDialog(); }}>
         {(dialog === "add" || dialog === "edit") && <Dialog.Portal>
           <Dialog.Backdrop className="fixed inset-0 z-50 bg-black/40" />
-          <Dialog.Popup initialFocus={type => type === "touch" ? true : nameInput.current ?? true} finalFocus={() => dialogOrigin.current ?? true} className="fixed top-1/2 left-1/2 z-50 max-h-[calc(100dvh-32px)] w-[calc(100%-32px)] max-w-lg -translate-x-1/2 -translate-y-1/2 overflow-y-auto rounded-2xl border border-[var(--color-border)] bg-[var(--color-canvas)] p-5 text-[var(--color-ink)] shadow-xl outline-none md:p-6">
+          <Dialog.Popup initialFocus={type => type === "touch" ? true : nameInput.current ?? true} finalFocus={restoreDialogFocus} className="fixed top-1/2 left-1/2 z-50 max-h-[calc(100dvh-32px)] w-[calc(100%-32px)] max-w-lg -translate-x-1/2 -translate-y-1/2 overflow-y-auto rounded-2xl border border-[var(--color-border)] bg-[var(--color-canvas)] p-5 text-[var(--color-ink)] shadow-xl outline-none md:p-6">
           <form
             onSubmit={saveUser}
             className="w-full"
@@ -496,7 +507,7 @@ export function UsersPage() {
       <Dialog.Root open={dialog === "delete" && Boolean(selected)} onOpenChange={(open) => { if (!open) closeDialog(); }}>
       {dialog === "delete" && selected ? <Dialog.Portal>
         <Dialog.Backdrop className="fixed inset-0 z-50 bg-black/40" />
-        <Dialog.Popup initialFocus={true} finalFocus={() => dialogOrigin.current ?? true} className="fixed top-1/2 left-1/2 z-50 max-h-[calc(100dvh-32px)] w-[calc(100%-32px)] max-w-md -translate-x-1/2 -translate-y-1/2 overflow-y-auto rounded-2xl border border-[var(--color-border)] bg-[var(--color-canvas)] p-6 text-[var(--color-ink)] shadow-xl outline-none">
+        <Dialog.Popup initialFocus={true} finalFocus={restoreDialogFocus} className="fixed top-1/2 left-1/2 z-50 max-h-[calc(100dvh-32px)] w-[calc(100%-32px)] max-w-md -translate-x-1/2 -translate-y-1/2 overflow-y-auto rounded-2xl border border-[var(--color-border)] bg-[var(--color-canvas)] p-6 text-[var(--color-ink)] shadow-xl outline-none">
             <Dialog.Title className="text-lg font-medium">Delete user</Dialog.Title>
             <Dialog.Description className="mt-2 text-sm text-[var(--color-ink-secondary)]">
               Remove {selected.name} from this demo workspace?
