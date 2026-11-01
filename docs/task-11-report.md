@@ -43,4 +43,4 @@ This review covers documentation consistency; it does not certify production bui
 | `docs/mercury-design-system.md` | `191f80d0d1a51b08acc7d1957f915099205ef564dc828cda904d950e12560c23` |
 | `00 - Project Overview.md` | `5e0b205da46efa27731d7584f2415d91a2ab1cc76929022d2427e936e12a48f9` |
 | `01 - Design System.md` | `8f0227f742663c173fb503377183b50dfc2dac233ad22996af95129c9359bad3` |
-| `02 - Swapiz Product Architecture.md` | `c18612c55a749bfa3ebf10bf01f6f9d2a728f6e818e57b36a35c67465bdbf4fd` |
+| `02 - Swapiz Product Architecture.md` | `d067ebd19e24fb0193f2fb5154a7688d9285daaa93109bb8e702d158e4c346d2` |
