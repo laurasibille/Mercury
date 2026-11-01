@@ -1,8 +1,10 @@
 "use client";
 
-import { useMemo, useState, type FormEvent } from "react";
+import { useMemo, useRef, useState, type FormEvent } from "react";
+import { Dialog } from "@base-ui/react/dialog";
 import { swapizDemoData } from "@/data/swapiz-demo";
 import type { RoleId, ScopeId, User } from "@/types/swapiz";
+import { useSwapiz } from "../providers/SwapizProvider";
 
 type Draft = Pick<
   User,
@@ -45,18 +47,16 @@ const initialsFor = (name: string) =>
     .join("");
 
 export function UsersPage() {
-  const [users, setUsers] = useState<User[]>(() =>
-    swapizDemoData.users.map((user) => ({
-      ...user,
-      scopeIds: [...user.scopeIds],
-    })),
-  );
+  const { state, dispatch } = useSwapiz();
+  const users = state.users;
   const [query, setQuery] = useState("");
   const [roleFilter, setRoleFilter] = useState<RoleId | "all">("all");
   const [dialog, setDialog] = useState<"add" | "edit" | "delete" | null>(null);
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [draft, setDraft] = useState<Draft>(emptyDraft);
   const [notice, setNotice] = useState("");
+  const dialogOrigin = useRef<HTMLElement | null>(null);
+  const nameInput = useRef<HTMLInputElement>(null);
   const selected = users.find((user) => user.id === selectedId) ?? null;
   const filtered = useMemo(() => {
     const term = query.trim().toLowerCase();
@@ -78,11 +78,13 @@ export function UsersPage() {
   }, [query, roleFilter, users]);
 
   function openAdd() {
+    dialogOrigin.current = document.activeElement as HTMLElement;
     setSelectedId(null);
     setDraft(emptyDraft);
     setDialog("add");
   }
   function openEdit(user: User) {
+    dialogOrigin.current = document.activeElement as HTMLElement;
     setSelectedId(user.id);
     setDraft({
       name: user.name,
@@ -94,6 +96,11 @@ export function UsersPage() {
     });
     setDialog("edit");
   }
+  function openDelete(user: User) {
+    dialogOrigin.current = document.activeElement as HTMLElement;
+    setSelectedId(user.id);
+    setDialog("delete");
+  }
   function closeDialog() {
     setDialog(null);
     setSelectedId(null);
@@ -104,13 +111,7 @@ export function UsersPage() {
     const email = draft.email.trim();
     if (!name || !email) return;
     if (dialog === "edit" && selected) {
-      setUsers((current) =>
-        current.map((user) =>
-          user.id === selected.id
-            ? { ...user, ...draft, name, email, initials: initialsFor(name) }
-            : user,
-        ),
-      );
+      dispatch({ type: "user/updated", user: { ...selected, ...draft, name, email, initials: initialsFor(name) } });
       setNotice(`${name} updated in this demo.`);
     } else {
       const user: User = {
@@ -123,20 +124,27 @@ export function UsersPage() {
         invitationStatus: "pending",
         lastActivity: "Invited · pending",
       };
-      setUsers((current) => [...current, user]);
+      dispatch({ type: "user/added", user });
       setNotice(`${name} added to this demo.`);
     }
     closeDialog();
   }
   function deleteUser() {
     if (selected) {
-      setUsers((current) => current.filter((user) => user.id !== selected.id));
+      dispatch({ type: "user/deleted", userId: selected.id });
       setNotice(`${selected.name} removed from this demo.`);
     }
     closeDialog();
   }
-  function updateScope(value: string) {
-    setDraft((current) => ({ ...current, scopeIds: [value as ScopeId] }));
+  function toggleScope(scopeId: ScopeId, checked: boolean) {
+    setDraft((current) => {
+      if (scopeId === "all") return { ...current, scopeIds: checked ? ["all"] : [] };
+      const selectedScopes = current.scopeIds.filter((id) => id !== "all");
+      const next = checked
+        ? [...new Set([...selectedScopes, scopeId])]
+        : selectedScopes.filter((id) => id !== scopeId);
+      return { ...current, scopeIds: next };
+    });
   }
 
   return (
@@ -202,78 +210,6 @@ export function UsersPage() {
             ))}
           </select>
         </label>
-        <div className="space-y-3 p-3 md:hidden">
-          {filtered.map((person) => (
-            <article
-              key={person.id}
-              aria-label={`User ${person.name}`}
-              className="min-w-0 rounded-lg border border-[var(--color-border)] p-3"
-            >
-              <div className="flex min-w-0 items-center gap-3">
-                <span
-                  aria-hidden="true"
-                  className="grid size-9 shrink-0 place-items-center rounded-full bg-[var(--color-primary-soft)] text-xs font-semibold text-[var(--color-primary)]"
-                >
-                  {person.initials}
-                </span>
-                <div className="min-w-0 flex-1">
-                  <h3 className="truncate text-sm font-medium">
-                    {person.name}
-                  </h3>
-                  <p className="truncate text-xs text-[var(--color-ink-muted)]">
-                    {person.email}
-                  </p>
-                </div>
-                <span className="shrink-0 rounded-full bg-[var(--color-surface)] px-2 py-1 text-xs">
-                  {roleName(person.roleId)}
-                </span>
-              </div>
-              <dl className="mt-3 grid grid-cols-2 gap-x-4 gap-y-3 border-t border-[var(--color-border)] pt-3 text-xs">
-                <UserField label="Scope">
-                  {person.scopeIds.map(scopeName).join(", ")}
-                </UserField>
-                <UserField label="Limit">
-                  {person.limitEur === null
-                    ? "No limit"
-                    : `€${person.limitEur.toLocaleString("en-US")}`}
-                </UserField>
-                <UserField label="Two-factor authentication">
-                  {person.twoFactorEnabled ? "Enabled" : "Off"}
-                </UserField>
-                <UserField label="Invitation">
-                  {person.invitationStatus === "active" ? "Active" : "Pending"}
-                </UserField>
-                <UserField label="Last activity">
-                  {person.lastActivity}
-                </UserField>
-                <UserField label="Joined">
-                  {dateFormat.format(new Date(`${person.joinedOn}T00:00:00Z`))}
-                </UserField>
-              </dl>
-              <div className="mt-3 flex gap-2 border-t border-[var(--color-border)] pt-2">
-                <button
-                  type="button"
-                  onClick={() => openEdit(person)}
-                  className="min-h-9 flex-1 rounded-md text-sm font-medium text-[var(--color-primary)] hover:bg-[var(--color-primary-soft)]"
-                  aria-label={`Edit ${person.name}`}
-                >
-                  Edit
-                </button>
-                <button
-                  type="button"
-                  onClick={() => {
-                    setSelectedId(person.id);
-                    setDialog("delete");
-                  }}
-                  className="min-h-9 flex-1 rounded-md text-sm text-[var(--color-ink-secondary)] hover:bg-[var(--color-surface)]"
-                  aria-label={`Delete ${person.name}`}
-                >
-                  Delete
-                </button>
-              </div>
-            </article>
-          ))}
-        </div>
       </section>
       <section
         aria-label="Team users"
@@ -382,8 +318,7 @@ export function UsersPage() {
                         <button
                           type="button"
                           onClick={() => {
-                            setSelectedId(person.id);
-                            setDialog("delete");
+                            openDelete(person);
                           }}
                           className="min-h-9 rounded-md px-2 text-xs font-medium text-[var(--color-ink-secondary)] hover:bg-[var(--color-surface)] focus-visible:outline-2 focus-visible:outline-[var(--color-primary)]"
                           aria-label={`Delete ${person.name}`}
@@ -416,25 +351,19 @@ export function UsersPage() {
           </div>
         )}
       </section>
-      {dialog === "add" || dialog === "edit" ? (
-        <div
-          role="dialog"
-          aria-modal="true"
-          aria-labelledby="user-dialog-title"
-          className="fixed inset-0 z-50 grid place-items-center bg-black/40 p-4"
-          onMouseDown={(event) => {
-            if (event.target === event.currentTarget) closeDialog();
-          }}
-        >
+      <Dialog.Root open={dialog === "add" || dialog === "edit"} onOpenChange={(open) => { if (!open) closeDialog(); }}>
+        {(dialog === "add" || dialog === "edit") && <Dialog.Portal>
+          <Dialog.Backdrop className="fixed inset-0 z-50 bg-black/40" />
+          <Dialog.Popup initialFocus={type => type === "touch" ? true : nameInput.current ?? true} finalFocus={() => dialogOrigin.current ?? true} className="fixed top-1/2 left-1/2 z-50 max-h-[calc(100dvh-32px)] w-[calc(100%-32px)] max-w-lg -translate-x-1/2 -translate-y-1/2 overflow-y-auto rounded-2xl border border-[var(--color-border)] bg-[var(--color-canvas)] p-5 text-[var(--color-ink)] shadow-xl outline-none md:p-6">
           <form
             onSubmit={saveUser}
-            className="max-h-[90vh] w-full max-w-lg overflow-y-auto rounded-2xl border border-[var(--color-border)] bg-[var(--color-canvas)] p-5 shadow-xl md:p-6"
+            className="w-full"
           >
             <div className="flex items-start justify-between gap-4">
               <div>
-                <h2 id="user-dialog-title" className="text-lg font-medium">
+                <Dialog.Title className="text-lg font-medium">
                   {dialog === "add" ? "Add user" : "Edit user"}
-                </h2>
+                </Dialog.Title>
                 <p className="mt-1 text-xs text-[var(--color-ink-muted)]">
                   Changes apply to the current demo session only.
                 </p>
@@ -452,7 +381,8 @@ export function UsersPage() {
               <label className={labelClass}>
                 Name
                 <input
-                  autoFocus
+                  id="user-name"
+                  ref={nameInput}
                   required
                   value={draft.name}
                   onChange={(event) =>
@@ -498,21 +428,18 @@ export function UsersPage() {
                   ))}
                 </select>
               </label>
-              <label className={labelClass}>
-                Scope
-                <select
-                  value={draft.scopeIds[0] ?? "all"}
-                  onChange={(event) => updateScope(event.target.value)}
-                  className={`${inputClass} mt-1`}
-                >
-                  <option value="all">All companies</option>
-                  {orgs.map((org) => (
-                    <option key={org.id} value={org.id}>
+              <fieldset className="sm:col-span-2">
+                <legend className={labelClass}>Organization scopes</legend>
+                <p className="mb-2 text-xs font-normal text-[var(--color-ink-muted)]">Select every company or department this user can access.</p>
+                <div className="grid gap-2 sm:grid-cols-2">
+                  {([{ id: "all", name: "All companies" }, ...orgs] as { id: ScopeId; name: string }[]).map((org) => (
+                    <label key={org.id} className="flex min-h-10 items-center gap-2 rounded-lg border border-[var(--color-border)] px-3 py-2 text-sm">
+                      <input type="checkbox" aria-label={org.name} checked={draft.scopeIds.includes(org.id)} onChange={(event) => toggleScope(org.id, event.target.checked)} className="size-4 accent-[var(--color-primary)]" />
                       {org.name}
-                    </option>
+                    </label>
                   ))}
-                </select>
-              </label>
+                </div>
+              </fieldset>
               <label className={labelClass}>
                 Spending limit (EUR)
                 <input
@@ -563,25 +490,21 @@ export function UsersPage() {
               </button>
             </div>
           </form>
-        </div>
-      ) : null}
-      {dialog === "delete" && selected ? (
-        <div
-          role="dialog"
-          aria-modal="true"
-          aria-labelledby="delete-user-title"
-          className="fixed inset-0 z-50 grid place-items-center bg-black/40 p-4"
-        >
-          <div className="w-full max-w-md rounded-2xl border border-[var(--color-border)] bg-[var(--color-canvas)] p-6 shadow-xl">
-            <h2 id="delete-user-title" className="text-lg font-medium">
-              Delete user
-            </h2>
-            <p className="mt-2 text-sm text-[var(--color-ink-secondary)]">
+          </Dialog.Popup>
+        </Dialog.Portal>}
+      </Dialog.Root>
+      <Dialog.Root open={dialog === "delete" && Boolean(selected)} onOpenChange={(open) => { if (!open) closeDialog(); }}>
+      {dialog === "delete" && selected ? <Dialog.Portal>
+        <Dialog.Backdrop className="fixed inset-0 z-50 bg-black/40" />
+        <Dialog.Popup initialFocus={true} finalFocus={() => dialogOrigin.current ?? true} className="fixed top-1/2 left-1/2 z-50 max-h-[calc(100dvh-32px)] w-[calc(100%-32px)] max-w-md -translate-x-1/2 -translate-y-1/2 overflow-y-auto rounded-2xl border border-[var(--color-border)] bg-[var(--color-canvas)] p-6 text-[var(--color-ink)] shadow-xl outline-none">
+            <Dialog.Title className="text-lg font-medium">Delete user</Dialog.Title>
+            <Dialog.Description className="mt-2 text-sm text-[var(--color-ink-secondary)]">
               Remove {selected.name} from this demo workspace?
-            </p>
+            </Dialog.Description>
             <div className="mt-6 flex justify-end gap-2">
               <button
                 type="button"
+                data-delete-cancel
                 onClick={closeDialog}
                 className="min-h-10 rounded-lg border border-[var(--color-border)] px-4 text-sm"
               >
@@ -595,9 +518,9 @@ export function UsersPage() {
                 Delete user
               </button>
             </div>
-          </div>
-        </div>
-      ) : null}
+        </Dialog.Popup>
+      </Dialog.Portal> : null}
+      </Dialog.Root>
       <div aria-label="Users on mobile" className="space-y-3 md:hidden">
         {filtered.map((person) => (
           <article
@@ -654,8 +577,7 @@ export function UsersPage() {
               <button
                 type="button"
                 onClick={() => {
-                  setSelectedId(person.id);
-                  setDialog("delete");
+                            openDelete(person);
                 }}
                 className="min-h-9 flex-1 rounded-md text-sm text-[var(--color-ink-secondary)] hover:bg-[var(--color-surface)]"
                 aria-label={`Delete ${person.name}`}

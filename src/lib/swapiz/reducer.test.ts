@@ -74,4 +74,31 @@ describe("shared dashboard state", () => {
     expect(swapizReducer(next, { type: "transaction/added", transaction })).toBe(next);
     expect(swapizReducer(next, { type: "transaction/added", transaction: { ...transaction, id: "invalid", organizationId: "missing" as Exclude<ScopeId, "all"> } })).toBe(next);
   });
+
+  it("keeps settings, user, and role demo edits in the shared session state", () => {
+    const updated = swapizReducer(initialSwapizState, {
+      type: "settings/updated",
+      settings: { companyName: "Northstar" },
+    });
+    expect(updated.settings.companyName).toBe("Northstar");
+    expect(updated.users.find(person => person.id === "user-3")?.scopeIds).toEqual(["amazon", "marketing", "development"]);
+
+    const user = updated.users.find(person => person.id === "user-3")!;
+    const withUserEdit = swapizReducer(updated, {
+      type: "user/updated",
+      user: { ...user, scopeIds: [...user.scopeIds, "operations"] },
+    });
+    expect(withUserEdit.users.find(person => person.id === "user-3")?.scopeIds).toEqual(["amazon", "marketing", "development", "operations"]);
+    expect(initialSwapizState.users.find(person => person.id === "user-3")?.scopeIds).toEqual(["amazon", "marketing", "development"]);
+
+    const finance = withUserEdit.roles.find(role => role.id === "finance")!;
+    const withRoleEdit = swapizReducer(withUserEdit, {
+      type: "role/permission-toggled",
+      roleId: "finance",
+      permission: "Approve money flow rules",
+      enabled: true,
+    });
+    expect(withRoleEdit.roles.find(role => role.id === "finance")?.permissions).toContain("Approve money flow rules");
+    expect(withRoleEdit.roles.find(role => role.id === "finance")).not.toBe(finance);
+  });
 });

@@ -1,8 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import { swapizDemoData } from "@/data/swapiz-demo";
+import { rolePermissionCatalog } from "@/data/role-permissions";
 import type { Role, RoleId } from "@/types/swapiz";
+import { useSwapiz } from "../providers/SwapizProvider";
 
 const feePermissions = new Set([
   "View fee settings",
@@ -11,32 +12,15 @@ const feePermissions = new Set([
 ]);
 
 export function RolesPage() {
-  const [roles, setRoles] = useState<Role[]>(() =>
-    swapizDemoData.roles.map((role) => ({
-      ...role,
-      permissions: [...role.permissions],
-    })),
-  );
+  const { state, dispatch } = useSwapiz();
+  const roles = state.roles;
   const [expanded, setExpanded] = useState<RoleId | null>(null);
   const [notice, setNotice] = useState("");
-  const allPermissions = [
-    ...new Set(roles.flatMap((role) => role.permissions)),
-  ];
+  const allPermissions = rolePermissionCatalog;
 
   function toggle(role: Role, permission: string, checked: boolean) {
     if (role.id !== "owner" && feePermissions.has(permission)) return;
-    setRoles((current) =>
-      current.map((item) =>
-        item.id !== role.id
-          ? item
-          : {
-              ...item,
-              permissions: checked
-                ? [...new Set([...item.permissions, permission])]
-                : item.permissions.filter((value) => value !== permission),
-            },
-      ),
-    );
+    dispatch({ type: "role/permission-toggled", roleId: role.id, permission, enabled: checked });
     setNotice(`${role.name} permissions updated in this demo.`);
   }
 
