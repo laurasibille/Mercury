@@ -2218,7 +2218,7 @@ export const swapizDemoData: SwapizDemoData = {
   "users": [
     {
       "id": "user-1",
-      "date": "2026-01-10",
+      "joinedOn": "2026-01-10",
       "initials": "AS",
       "name": "Alex Stone",
       "email": "alex@starclick.co",
@@ -2233,7 +2233,7 @@ export const swapizDemoData: SwapizDemoData = {
     },
     {
       "id": "user-2",
-      "date": "2026-01-10",
+      "joinedOn": "2026-01-10",
       "initials": "KR",
       "name": "Kramer",
       "email": "kramer@starclick.co",
@@ -2248,7 +2248,7 @@ export const swapizDemoData: SwapizDemoData = {
     },
     {
       "id": "user-3",
-      "date": "2026-03-02",
+      "joinedOn": "2026-03-02",
       "initials": "AK",
       "name": "Anna Kovalenko",
       "email": "anna.k@starclick.co",
@@ -2265,7 +2265,7 @@ export const swapizDemoData: SwapizDemoData = {
     },
     {
       "id": "user-4",
-      "date": "2026-06-14",
+      "joinedOn": "2026-06-14",
       "initials": "MR",
       "name": "Max Rivera",
       "email": "max.r@starclick.co",
@@ -2280,7 +2280,7 @@ export const swapizDemoData: SwapizDemoData = {
     },
     {
       "id": "user-5",
-      "date": "2026-02-20",
+      "joinedOn": "2026-02-20",
       "initials": "JP",
       "name": "Julia Park",
       "email": "julia.p@starclick.co",
@@ -2295,7 +2295,7 @@ export const swapizDemoData: SwapizDemoData = {
     },
     {
       "id": "user-6",
-      "date": "2026-04-08",
+      "joinedOn": "2026-04-08",
       "initials": "OB",
       "name": "Omar Bakr",
       "email": "omar.b@starclick.co",
@@ -2310,7 +2310,7 @@ export const swapizDemoData: SwapizDemoData = {
     },
     {
       "id": "user-7",
-      "date": "2026-07-01",
+      "joinedOn": "2026-07-01",
       "initials": "LS",
       "name": "Lena Smirnova",
       "email": "lena.s@starclick.co",
@@ -2325,7 +2325,7 @@ export const swapizDemoData: SwapizDemoData = {
     },
     {
       "id": "user-8",
-      "date": "2026-08-19",
+      "joinedOn": "2026-08-19",
       "initials": "TW",
       "name": "Tom Walsh",
       "email": "tom.w@starclick.co",
@@ -2340,7 +2340,7 @@ export const swapizDemoData: SwapizDemoData = {
     },
     {
       "id": "user-9",
-      "date": "2026-10-18",
+      "joinedOn": "2026-10-18",
       "initials": "DO",
       "name": "David Okafor",
       "email": "david.o@starclick.co",
